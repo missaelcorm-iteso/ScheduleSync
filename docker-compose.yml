@@ -1,0 +1,10 @@
+version: '3'
+services:
+  nodejs:
+    image: node:18
+    volumes:
+      - .:/app
+    ports:
+      - "4000:8080"
+    stdin_open: true 
+    tty: true
