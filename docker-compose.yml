@@ -5,6 +5,8 @@ services:
     volumes:
       - .:/app
     ports:
-      - "4000:8080"
+      - "4000:4000"
+      - "4080:8080"
     stdin_open: true 
     tty: true
+    command: ["python3", "-m", "http.server", "-d", "/app/frontend", "8080"]
