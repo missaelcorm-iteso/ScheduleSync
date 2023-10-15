@@ -18,7 +18,7 @@
     background: transparent;
 }
 
-.header .nav a{
+.header .hNav a{
     text-decoration: none;
     color: #fff;
     font-size: 20px;
@@ -117,6 +117,7 @@
 .login {
     width: 450px;
     position: relative;
+    margin-left: 240px;
     padding: 100px 30px;
     backdrop-filter: blur(10px);
 }
