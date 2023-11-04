@@ -14,7 +14,7 @@ router.put('/users/:id', usersController.edit);
 router.delete('/users/:id', usersController.delete);
 router.get('/users/:id', usersController.show);
 
-// Users
+// Activities
 router.get('/activities', activitiesController.list);
 router.post('/activities', activitiesController.create);
 router.put('/activities/:id', activitiesController.edit);
