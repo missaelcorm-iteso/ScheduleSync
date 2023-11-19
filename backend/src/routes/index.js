@@ -21,10 +21,11 @@ router.delete('/users/:id', authMiddleware, usersController.delete);
 router.get('/users/:id', usersController.show);
 
 // Activities
-router.get('/activities', activitiesController.list);
-router.post('/activities', activitiesController.create);
-router.put('/activities/:id', activitiesController.edit);
-router.delete('/activities/:id', activitiesController.delete);
-router.get('/activities/:id', activitiesController.show);
+router.use('/users/:userId/activities', authMiddleware);
+router.get('/users/:userId/activities/', activitiesController.list);
+router.post('/users/:userId/activities', activitiesController.create);
+router.put('/users/:userId/activities/:activityId', activitiesController.edit);
+router.delete('/users/:userId/activities/:activityId', activitiesController.delete);
+router.get('/users/:userId/activities/:activityId', activitiesController.show);
 
 module.exports = router;
