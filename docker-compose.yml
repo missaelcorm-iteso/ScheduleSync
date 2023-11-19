@@ -9,4 +9,4 @@ services:
       - "4080:8080"
     stdin_open: true 
     tty: true
-    command: ["python3", "-m", "http.server", "-d", "/app/frontend", "8080"]
+    command: ["python3", "-m", "http.server", "-d", "/app/frontend/public", "8080"]
