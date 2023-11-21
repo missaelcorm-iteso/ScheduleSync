@@ -9,7 +9,6 @@ $(document).ready(() => {
         },
         contentType: 'application/json',
         success: (tasks) => {
-            console.log(tasks);
             var templateSource = $('#task-template').html();
             var template = Handlebars.compile(templateSource);
 
