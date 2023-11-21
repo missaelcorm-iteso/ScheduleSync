@@ -27,5 +27,6 @@ router.post('/users/:userId/activities', activitiesController.create);
 router.put('/users/:userId/activities/:activityId', activitiesController.edit);
 router.delete('/users/:userId/activities/:activityId', activitiesController.delete);
 router.get('/users/:userId/activities/:activityId', activitiesController.show);
+router.post('/users/:userId/activities/:activityId/complete', activitiesController.complete);
 
 module.exports = router;

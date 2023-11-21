@@ -15,7 +15,7 @@ class LoginController {
                         id: user._id,
                         email: user.email
                     }, secretkey);
-                res.send({ token });
+                res.send({ token, userId: user._id });
             } else {
                 res.status(401).send({ message: 'Invalid credentials' });
             }

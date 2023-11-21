@@ -14,12 +14,12 @@ class ActivitiesController {
     }
 
     create(req, res){
-        const { title, location, start_date, end_date, is_private } = req.body;
+        const { title, location, description, start_date, end_date, is_private } = req.body;
         const userId = req.user.id;
         
         User.findById(userId).then((user) => {
             if(user){
-                const newActivity = new Activity({ userId, title, owner: user.name, location, start_date, end_date, is_private });
+                const newActivity = new Activity({ userId, title, owner: user.name, location, description, start_date, end_date, is_private });
                 newActivity.save().then(() => {
                     res.status(201).send({ message: 'Activity created' });
                 }).catch((err) => {
@@ -58,9 +58,10 @@ class ActivitiesController {
 
         Activity.findOne({ _id: activityId, userId }).then((activity) => {
             if(activity){
-                const { title, location, start_date, end_date, is_private } = req.body;
+                const { title, location, description, start_date, end_date, is_private } = req.body;
                 activity.title = title;
                 activity.location = location;
+                activity.description = description;
                 activity.start_date = start_date;
                 activity.end_date = end_date;
                 activity.is_private = is_private;
@@ -86,6 +87,28 @@ class ActivitiesController {
         Activity.findOneAndDelete({ _id: activityId, userId }).then((activity) => {
             if(activity){
                 res.send({ message: 'Activity deleted' });
+            } else {
+                res.status(404).send({});
+            }
+        }).catch((err) => {
+            res.status(500).send({ message: 'Error retrieving activity' });
+            console.log(err);
+        });
+    }
+
+    complete(req, res){
+        const userId = req.user.id;
+        const activityId = req.params.activityId;
+
+        Activity.findOne({ _id: activityId, userId }).then((activity) => {
+            if(activity){
+                activity.is_completed = true;
+                activity.save().then(() => {
+                    res.send({ message: 'Activity completed' });
+                }).catch((err) => {
+                    res.status(500).send({ message: 'Error completing activity' });
+                    console.log(err);
+                });
             } else {
                 res.status(404).send({});
             }
