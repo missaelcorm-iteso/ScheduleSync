@@ -117,6 +117,24 @@ class ActivitiesController {
             console.log(err);
         });
     }
+
+    today(req, res){
+        const userId = req.user.id;
+        
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0); // Set to the beginning of the current day
+        const todayEnd = new Date();
+        todayEnd.setHours(23, 59, 59, 999); // Set to the end of the current day
+        const todayStartEpoch = todayStart.getTime() / 1000; // Convert to seconds
+        const todayEndEpoch = todayEnd.getTime() / 1000; // Convert to seconds
+
+        Activity.find({ userId: userId, start_date: { $gte: todayStartEpoch, $lte: todayEndEpoch }}).then((activities) => {
+            res.send(activities);
+        }).catch((err) => {
+            res.status(500).send({ message: 'Error retrieving activities' });
+            console.log(err);
+        });
+    }
 }
 
 module.exports = new ActivitiesController();

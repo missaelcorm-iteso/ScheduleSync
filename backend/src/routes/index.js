@@ -21,12 +21,13 @@ router.delete('/users/:id', authMiddleware, usersController.delete);
 router.get('/users/:id', usersController.show);
 
 // Activities
-router.use('/users/:userId/activities', authMiddleware);
-router.get('/users/:userId/activities/', activitiesController.list);
-router.post('/users/:userId/activities', activitiesController.create);
-router.put('/users/:userId/activities/:activityId', activitiesController.edit);
-router.delete('/users/:userId/activities/:activityId', activitiesController.delete);
-router.get('/users/:userId/activities/:activityId', activitiesController.show);
-router.post('/users/:userId/activities/:activityId/complete', activitiesController.complete);
+router.use('/activities', authMiddleware);
+router.get('/activities', activitiesController.list);
+router.get('/activities/today', activitiesController.today);
+router.post('/activities', activitiesController.create);
+router.put('/activities/:activityId', activitiesController.edit);
+router.delete('/activities/:activityId', activitiesController.delete);
+router.get('/activities/:activityId', activitiesController.show);
+router.post('/activities/:activityId/complete', activitiesController.complete);
 
 module.exports = router;
