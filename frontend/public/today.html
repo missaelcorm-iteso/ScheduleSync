@@ -54,7 +54,7 @@
             <div class="row">
                 <div class="col-8">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#task{{id}}Collapse" aria-expanded="true" aria-controls="task{{id}}Collapse">
+                        <button id="taskAccordion-{{id}}" class="btn btn-link taskAccordion" data-toggle="collapse" data-target="#task{{id}}Collapse" aria-expanded="true" aria-controls="task{{id}}Collapse">
                           {{title}}
                         </button>
                       </h5>
@@ -77,9 +77,9 @@
           <p>{{location}}</p>
           <p>{{description}}</p>
           <!-- Buttons for Complete, Delete, and Edit -->
-          <button type="button" class="btn btn-success"><i class="fas fa-check"></i> Complete</button>
-          <button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
-          <button type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</button>
+          <button id="complete-button-{{id}}" type="button" class="btn btn-success"><i class="fas fa-check"></i> Complete</button>
+          <button id="delete-button-{{id}}" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+          <button id="edit-button-{{id}}" type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</button>
         </div>
       </div>
     </div>
