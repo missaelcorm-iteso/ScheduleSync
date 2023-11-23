@@ -19,14 +19,12 @@ $(document).ready(() => {
             location: location.val(),
             description: description.val(),
             start_date: new Date(start_date.val()).getTime()/1000,
-            end_date: end_date.val() === undefined ? new Date(end_date.val()).getTime()/1000 : 0,
+            end_date: end_date.val() === "" ? 0 : new Date(end_date.val()).getTime()/1000,
             is_private,
             is_completed
         };
 
         if(data.end_date === 0) delete data.end_date;
-
-        console.log(data);
 
         $.ajax({
             type: 'POST',
