@@ -1,8 +1,8 @@
 $(document).ready(() => {
-    const token = localStorage.getItem('token');
-
     $('#add-task-form').submit((e) => {
         e.preventDefault();
+
+        const token = localStorage.getItem('token');
 
         const title = $('#title');
         const location = $('#location');

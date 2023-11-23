@@ -14,12 +14,12 @@ class ActivitiesController {
     }
 
     create(req, res){
-        const { title, location, description, start_date, end_date, is_private } = req.body;
+        const { title, location, description, start_date, end_date, is_private, is_completed} = req.body;
         const userId = req.user.id;
         
         User.findById(userId).then((user) => {
             if(user){
-                const newActivity = new Activity({ userId, title, owner: user.name, location, description, start_date, end_date, is_private });
+                const newActivity = new Activity({ userId, title, owner: user.name, location, description, start_date, end_date, is_private, is_completed });
                 newActivity.save().then(() => {
                     res.status(201).send({ message: 'Activity created' });
                 }).catch((err) => {
@@ -58,13 +58,14 @@ class ActivitiesController {
 
         Activity.findOne({ _id: activityId, userId }).then((activity) => {
             if(activity){
-                const { title, location, description, start_date, end_date, is_private } = req.body;
+                const { title, location, description, start_date, end_date, is_private, is_completed} = req.body;
                 activity.title = title;
                 activity.location = location;
                 activity.description = description;
                 activity.start_date = start_date;
                 activity.end_date = end_date;
                 activity.is_private = is_private;
+                activity.is_completed = is_completed;
                 activity.save().then(() => {
                     res.send({ message: 'Activity updated' });
                 }).catch((err) => {
