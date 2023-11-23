@@ -20,6 +20,7 @@ $(document).ready(() => {
                     alert('Login Successful!');
 
                     localStorage.setItem('token', data.token);
+                    localStorage.setItem('userId', data.userId);
                     window.location.href = '/index.html';
                 }
             },

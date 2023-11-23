@@ -3,57 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="assets/css/today.css">
+    <title>ScheduleSync - Today</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="assets/images/ScheduleSyncLogo.png">
+  <div id="navbar-placeholder"></div>
+
+    <div class="container mt-5">
+        <h2>Tasks for Today</h2>
+    
+        <!-- Task Accordion -->
+        <div id="taskAccordion">
+          <!-- Handlebars template will be inserted here -->
+        </div>
+        <!-- End Task Accordion -->
+    
+    </div>
+
+    <script id="task-template" type="text/x-handlebars-template">
+    <div class="card">
+      <div class="card-header" id="task{{id}}Heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="mb-0">
+                        <button id="taskAccordion-{{id}}" class="btn btn-link taskAccordion" data-toggle="collapse" data-target="#task{{id}}Collapse" aria-expanded="true" aria-controls="task{{id}}Collapse">
+                          {{title}}
+                        </button>
+                      </h5>
+                </div>
+                <div class="col-4">
+                    <p class="text-right task-status-{{status}}"><small>{{status}}</small></p>
+                    {{# if end_date}}
+                    <p class="text-right"><small>{{start_date}} - {{end_date}}</small></p>
+                    {{else}}
+                    <p class="text-right"><small>{{start_date}}</small></p>
+                    {{/ if}}
+                </div>
             </div>
-            <ul>
-                <li><a href="today.html"> Today </a></li>
-                <li><a href="todo.html"> To-Do List </a></li>
-                <li><a href="#"> Contacts </a></li>
-                <li><a href="#"> Calendar </a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section class="hero">
-            <h2>Welcome --username--</h2>
-            <p>Coordinate your schedule with fellow students and make the most out of your time.</p>
-        </section>
-
-        <h3 class="todo-header">Sunday 15 OCT</h3><button class="add-task">Add task</button>
-        <ul class="To-Do_List">
-            <li class="task-container completed">
-                <input type="checkbox" class="task-checkbox">
-                <span class="task-title">Buy Eggs</span>
-                <span class="task-due-date">all-day</span>
-                <button class="delete-task">❌</button>
-            </li>
-            <li class="task-container">
-                <input type="checkbox" class="task-checkbox">
-                <span class="task-title">Go to School</span>
-                <span class="task-due-date">8:30 a.m. - 2:00 p.m.</span>
-                <button class="delete-task">❌</button>
-            </li>
-            <li class="task-container">
-                <input type="checkbox" class="task-checkbox">
-                <span class="task-title">Math Homework</span>
-                <span class="task-due-date">11:59 p.m.</span>
-                <button class="delete-task">❌</button>
-            </li>
-            <li class="task-container">
-                <input type="checkbox" class="task-checkbox">
-                <span class="task-title">Dinner with Alice</span>
-                <span class="task-due-date">8:00 p.m.</span>
-                <button class="delete-task">❌</button>
-            </li>
-        </ul>
-    </main>
+        </div>
+        
+       
+      </div>
+      <div id="task{{id}}Collapse" class="collapse" aria-labelledby="task{{id}}Heading" data-parent="#taskAccordion">
+        <div class="card-body">
+          <p>{{location}}</p>
+          <p>{{description}}</p>
+          <!-- Buttons for Complete, Delete, and Edit -->
+          <button id="complete-button-{{id}}" type="button" class="btn btn-success"><i class="fas fa-check"></i> Complete</button>
+          <button id="delete-button-{{id}}" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+          <button id="edit-button-{{id}}" type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</button>
+        </div>
+      </div>
+    </div>
+  </script>
+  
+    
+  <script src="./js/main.js"></script>
+    <script src="js/today.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>
