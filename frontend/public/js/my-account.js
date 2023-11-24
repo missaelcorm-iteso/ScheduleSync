@@ -20,6 +20,8 @@ $(document).ready(function() {
             Authorization: `${token}`
         },
         success: (data) => {
+            const birthdate = new Date(data.birthdate).toISOString().split('T')[0];
+            data.birthdate = new Date(data.birthdate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const html = compiledTemplate(data);
             $('#userInfo').html(html);
 
@@ -33,7 +35,7 @@ $(document).ready(function() {
 
                 $('#name').val(data.name);
                 $('#email').val(data.email);
-                $('#birthdate').val(data.birthdate);
+                $('#birthdate').val(birthdate);
             });
 
             $('#editForm .btn-success').on('click', (e) => {            
@@ -50,8 +52,8 @@ $(document).ready(function() {
                 const name = $('#name').val();
                 const email = $('#email').val();
                 const birthdate = $('#birthdate').val();
-                const new_password = $('#new_password').val();
-                const confirm_new_password = $('#confirm_new_password').val();
+                const new_password = $('#new-password').val();
+                const confirm_new_password = $('#confirm-new-password').val();
 
                 if(new_password === "" && confirm_new_password !== "") {
                     alert('Please enter a new password');
