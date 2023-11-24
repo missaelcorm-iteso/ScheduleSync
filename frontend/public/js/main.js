@@ -1,5 +1,5 @@
 const token = localStorage.getItem('token');
-const path_no_auth = ['/login.html', '/register.html', '/index.html'];
+const path_no_auth = ['/', '/login.html', '/register.html', '/index.html'];
 
 // If the user is not logged in, redirect to the login page
 if (!token && path_no_auth.indexOf(window.location.pathname) === -1) {
@@ -8,6 +8,41 @@ if (!token && path_no_auth.indexOf(window.location.pathname) === -1) {
 }
 
 $(function() {
-    // Load the navbar using jQuery
-    $('#navbar-placeholder').load('./assets/templates/navbar.html');
+
+    const template = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html">ScheduleSync</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul id="navbar-items" class="navbar-nav">
+        <li class="nav-item"> <a class="nav-link" href="index.html">Home</a> </li>
+        {{# if token}}
+        <li class="nav-item"> <a class="nav-link" href="today.html">Today</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="todo.html">ToDo</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="add-task.html">Add Task</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="#">Logout</a> </li>
+        {{else}}
+        <li class="nav-item"> <a class="nav-link" href="login.html">Login</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="register.html">Register</a> </li>
+        {{/ if}}
+      </ul>
+    </div>
+  </nav>`;
+    const compiledNavbar = Handlebars.compile(template);
+
+    const context = {
+        token
+    };
+
+    const html = compiledNavbar(context);
+    $('#navbar-placeholder').html(html);
+
+    $('#navbar-items').on('click', 'li.nav-item:nth-child(5)', (e) => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        window.location.href = '/login.html';
+    });
+
 });
