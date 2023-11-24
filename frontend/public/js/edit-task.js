@@ -37,8 +37,7 @@ $(document).ready(() => {
     is_private_e.prop('checked', _is_private);
     is_completed_e.prop('checked', _is_completed);
 
-    return;
-    $('#add-task-form').submit((e) => {
+    $('#edit-task-form').submit((e) => {
         e.preventDefault();
 
         const token = localStorage.getItem('token');
