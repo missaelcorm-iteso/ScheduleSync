@@ -25,10 +25,16 @@ $(document).ready(() => {
                 }
             },
             error: (err) => {
-                const errorMessage = err.responseJSON.message;
-                const error = $('#error');
-                error.text(errorMessage);
-                error.removeClass('hidden');
+                try {
+                    const errorMessage = err.responseJSON.message;
+                    const error = $('#error');
+                    error.text(errorMessage);
+                    error.removeClass('hidden');
+                } catch (e) {
+                    const error = $('#error');
+                    error.text("Something went wrong");
+                    error.removeClass('hidden');
+                }
             }
         });
     });
