@@ -4,6 +4,7 @@ $(document).ready(() => {
 
         const email = $('#email').val();
         const password = $('#password').val();
+        const rememberMe = $('#rememberMe').is(':checked');
 
         const data = {
             email,
@@ -19,8 +20,15 @@ $(document).ready(() => {
                 if (data.token) {
                     alert('Login Successful!');
 
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userId', data.userId);
+                    if (rememberMe) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('userId', data.userId);
+                    }
+                    else {
+                        sessionStorage.setItem('token', data.token);
+                        sessionStorage.setItem('userId', data.userId);
+                    }
+                    
                     window.location.href = '/index.html';
                 }
             },

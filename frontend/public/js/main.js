@@ -1,4 +1,4 @@
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 const path_no_auth = ['/', '/login.html', '/register.html', '/index.html'];
 
 // If the user is not logged in, redirect to the login page
@@ -39,7 +39,13 @@ $(function() {
     const html = compiledNavbar(context);
     $('#navbar-placeholder').html(html);
 
+    $('#body').removeAttr('hidden');
+
     $('#navbar-items').on('click', 'li.nav-item:nth-child(5)', (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userId');
+
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         window.location.href = '/login.html';

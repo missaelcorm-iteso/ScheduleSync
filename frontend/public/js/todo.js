@@ -1,5 +1,4 @@
 $(document).ready(() => {
-    const token = localStorage.getItem('token');
 
     const fetchData = () => {
         return new Promise((resolve, reject) => {
@@ -64,7 +63,7 @@ $(document).ready(() => {
                     },
                     contentType: 'application/json',
                     success: (data) => {
-                        window.location.href = '/today.html';
+                        window.location.href = '/todo.html';
                     },
                     error: (error) => {
                         console.error('Error completing task:', error);
@@ -83,7 +82,7 @@ $(document).ready(() => {
                     },
                     contentType: 'application/json',
                     success: (data) => {
-                        window.location.href = '/today.html';
+                        window.location.href = '/todo.html';
                     },
                     error: (error) => {
                         console.error('Error deleting task:', error);
