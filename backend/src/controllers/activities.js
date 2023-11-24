@@ -119,6 +119,28 @@ class ActivitiesController {
         });
     }
 
+    uncomplete(req, res){
+        const userId = req.user.id;
+        const activityId = req.params.activityId;
+
+        Activity.findOne({ _id: activityId, userId }).then((activity) => {
+            if(activity){
+                activity.is_completed = false;
+                activity.save().then(() => {
+                    res.send({ message: 'Activity uncompleted' });
+                }).catch((err) => {
+                    res.status(500).send({ message: 'Error uncompleting activity' });
+                    console.log(err);
+                });
+            } else {
+                res.status(404).send({});
+            }
+        }).catch((err) => {
+            res.status(500).send({ message: 'Error retrieving activity' });
+            console.log(err);
+        });
+    }
+
     today(req, res){
         const userId = req.user.id;
         
