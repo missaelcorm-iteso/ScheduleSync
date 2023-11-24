@@ -95,7 +95,7 @@ $(document).ready(() => {
             editButton.on('click', (e) => {
                 e.preventDefault();
 
-                window.location.href = `/edit-task.html?id=${task._id}`;
+                window.location.href = `/edit-task.html?id=${task._id}&title=${task.title}&location=${task.location}&description=${task.description}&start_date=${task.start_date}&end_date=${task.end_date}&is_private=${task.is_private}&is_completed=${task.is_completed}`;
             });
 
             // console.log(task);
