@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScheduleSync - My Account</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/my-account.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body id="body" hidden>
+    <div id="navbar-placeholder"></div>
+
+
+    <div class="container mt-5">
+        <h2>My Account</h2>
+    
+        <!-- Display User Information with Profile Picture -->
+        <div id="userInfo">
+        </div>
+    
+        <!-- Edit User Information Form (Initially Hidden) -->
+        <form id="editForm" style="display: none;">
+          <!-- Add an input for the profile picture (you may use a file input) -->
+          <div class="form-group">
+            <label for="profilePicture">Profile Picture:</label>
+            <input type="file" class="form-control-file" id="profilePicture">
+          </div>
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" class="form-control" id="birthdate">
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+          </div>
+            <div class="form-group">
+                <label for="new-password">New Password:</label>
+                <input type="password" class="form-control" id="new-password" placeholder="Enter your new password">
+            </div>
+            <div class="form-group">
+                <label for="confirm-new-password">Confirm New Password:</label>
+                <input type="password" class="form-control" id="confirm-new-password" placeholder="Confirm your new password">
+            </div>
+
+          <button type="button" class="btn btn-success">Save Changes</button>
+          <button type="button" class="btn btn-secondary">Cancel</button>
+        </form>
+      </div>
+
+    <script src="./js/main.js"></script>
+    <script src="js/my-account.js"></script>
+</body>
+</html>

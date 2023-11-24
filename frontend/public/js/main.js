@@ -1,4 +1,5 @@
 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
 const path_no_auth = ['/', '/login.html', '/register.html', '/index.html'];
 
 // If the user is not logged in, redirect to the login page
@@ -19,6 +20,7 @@ $(function() {
       <ul id="navbar-items" class="navbar-nav">
         <li class="nav-item"> <a class="nav-link" href="index.html">Home</a> </li>
         {{# if token}}
+        <li class="nav-item"> <a class="nav-link" href="my-account.html">My Account</a> </li>
         <li class="nav-item"> <a class="nav-link" href="today.html">Today</a> </li>
         <li class="nav-item"> <a class="nav-link" href="todo.html">ToDo</a> </li>
         <li class="nav-item"> <a class="nav-link" href="add-task.html">Add Task</a> </li>
@@ -41,7 +43,7 @@ $(function() {
 
     $('#body').removeAttr('hidden');
 
-    $('#navbar-items').on('click', 'li.nav-item:nth-child(5)', (e) => {
+    $('#navbar-items').on('click', 'li.nav-item:nth-child(6)', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');
