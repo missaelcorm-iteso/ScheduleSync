@@ -39,6 +39,8 @@ $(function() {
     const html = compiledNavbar(context);
     $('#navbar-placeholder').html(html);
 
+    $('#body').removeAttr('hidden');
+
     $('#navbar-items').on('click', 'li.nav-item:nth-child(5)', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('token');

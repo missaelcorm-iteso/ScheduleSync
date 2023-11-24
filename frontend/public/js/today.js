@@ -1,6 +1,4 @@
 $(document).ready(() => {
-    const token = localStorage.getItem('token');
-    // const userId = localStorage.getItem('userId');
 
     const fetchData = () => {
         return new Promise((resolve, reject) => {

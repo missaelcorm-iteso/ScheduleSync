@@ -1,6 +1,5 @@
 $(document).ready(() => {
 
-
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const _id = urlParams.get('id');
@@ -39,8 +38,6 @@ $(document).ready(() => {
 
     $('#edit-task-form').submit((e) => {
         e.preventDefault();
-
-        const token = localStorage.getItem('token');
 
         const data = {
             title: title.val(),
