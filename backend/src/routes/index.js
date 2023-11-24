@@ -13,12 +13,11 @@ router.use(express.json());
 router.post('/login', loginController.login);
 
 // Users
-router.get('/users', authMiddleware);
-router.get('/users', usersController.list);
+router.get('/users', authMiddleware, usersController.list);
 router.post('/users', usersController.create);
 router.put('/users/:id', authMiddleware, usersController.edit);
 router.delete('/users/:id', authMiddleware, usersController.delete);
-router.get('/users/:id', usersController.show);
+router.get('/users/:id', authMiddleware, usersController.show);
 
 // Activities
 router.use('/activities', authMiddleware);
