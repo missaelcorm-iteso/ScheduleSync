@@ -45,6 +45,7 @@ $(document).ready(() => {
             const taskId = e.currentTarget.id.split('-')[1];
             const task = tasks[taskId - 1];
             const completeButton = $(`#complete-button-${taskId}`);
+            const uncompleteButton = $(`#uncomplete-button-${taskId}`);
             const deleteButton = $(`#delete-button-${taskId}`);
             const editButton = $(`#edit-button-${taskId}`);
 
@@ -67,6 +68,29 @@ $(document).ready(() => {
                     },
                     error: (error) => {
                         console.error('Error completing task:', error);
+                    }
+                });
+            });
+
+            uncompleteButton.on('click', (e) => {
+                e.preventDefault();
+
+                if (!task.is_completed) {
+                    return;
+                }
+
+                $.ajax({
+                    url: `http://localhost:4000/activities/${task._id}/uncomplete`,
+                    method: 'POST',
+                    headers: {
+                        Authorization: `${token}`
+                    },
+                    contentType: 'application/json',
+                    success: (data) => {
+                        window.location.href = '/todo.html';
+                    },
+                    error: (error) => {
+                        console.error('Error uncompleting task:', error);
                     }
                 });
             });

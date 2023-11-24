@@ -29,5 +29,6 @@ router.put('/activities/:activityId', activitiesController.edit);
 router.delete('/activities/:activityId', activitiesController.delete);
 router.get('/activities/:activityId', activitiesController.show);
 router.post('/activities/:activityId/complete', activitiesController.complete);
+router.post('/activities/:activityId/uncomplete', activitiesController.uncomplete);
 
 module.exports = router;
