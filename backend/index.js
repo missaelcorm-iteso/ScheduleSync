@@ -9,17 +9,13 @@ const app = express();
 
 const routes = require('./src/routes');
 
-const {
-    MONGO_PROTOCOL,
-    MONGO_HOST,
-    MONGO_DB,
-    MONGO_USER,
-    MONGO_PASS,
-} = process.env;
+const mongoURL = process.env.Mongo_URI;
 
-const APP_PORT = process.env.APP_PORT || 3000;
-
-const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB}?retryWrites=true&w=majority`;
+mongoose.connect(mongoURL).then(() => {
+    app.listen(3000, () => {
+        console.log('App is running...');
+    })
+})
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
@@ -34,5 +30,5 @@ mongoose.connect(MONGO_URI).then((client) => {
         console.log(`Server running on port ${APP_PORT} and connected to MongoDB`);
     });
 }).catch((err) => {
-    console.log(err);
+    console.log('Error connecting to the database...', err);
 });
