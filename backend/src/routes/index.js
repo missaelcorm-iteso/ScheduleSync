@@ -13,19 +13,21 @@ router.use(express.json());
 router.post('/login', loginController.login);
 
 // Users
-router.get('/users', authMiddleware);
-router.get('/users', usersController.list);
+router.get('/users', authMiddleware, usersController.list);
 router.post('/users', usersController.create);
 router.put('/users/:id', authMiddleware, usersController.edit);
 router.delete('/users/:id', authMiddleware, usersController.delete);
-router.get('/users/:id', usersController.show);
+router.get('/users/:id', authMiddleware, usersController.show);
 
 // Activities
-router.use('/users/:userId/activities', authMiddleware);
-router.get('/users/:userId/activities/', activitiesController.list);
-router.post('/users/:userId/activities', activitiesController.create);
-router.put('/users/:userId/activities/:activityId', activitiesController.edit);
-router.delete('/users/:userId/activities/:activityId', activitiesController.delete);
-router.get('/users/:userId/activities/:activityId', activitiesController.show);
+router.use('/activities', authMiddleware);
+router.get('/activities', activitiesController.list);
+router.get('/activities/today', activitiesController.today);
+router.post('/activities', activitiesController.create);
+router.put('/activities/:activityId', activitiesController.edit);
+router.delete('/activities/:activityId', activitiesController.delete);
+router.get('/activities/:activityId', activitiesController.show);
+router.post('/activities/:activityId/complete', activitiesController.complete);
+router.post('/activities/:activityId/uncomplete', activitiesController.uncomplete);
 
 module.exports = router;

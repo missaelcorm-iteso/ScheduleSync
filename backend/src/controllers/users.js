@@ -7,15 +7,14 @@ class UsersController {
         User.find().then((users) => {
             res.send(users);
         }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
+            res.status(500).send({ message: 'Error while searching the users' });
         });
     }
 
     create(req, res){
-        const { name, email, password } = req.body;
+        const { name, email, password, birthdate } = req.body;
 
-        if(!name || !email || !password){
+        if(!name || !email || !password || !birthdate){
             res.status(400).send({ message: 'Missing fields' });
             return;
         }
@@ -30,16 +29,14 @@ class UsersController {
                 res.status(400).send({ message: 'Email already in use' });
                 return;
             }
-            const newUser = new User({ name, email, password: bcrypt.hashSync(password, 10) });
+            const newUser = new User({ name, email, password: bcrypt.hashSync(password, 10), birthdate });
             newUser.save().then(() => {
                 res.status(201).send({ message: 'User created' });
             }).catch((err) => {
-                res.sendStatus(500);
-                console.log(err);
+                res.status(500).send({ message: 'Error while saving the user' });
             });
         }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
+            res.status(500).send({ message: 'Error while searching the user' });
         });
 
     }
@@ -53,42 +50,50 @@ class UsersController {
                 res.status(404).send({});
             }
         }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
+            res.status(500).send({ message: 'Error while searching the user' });
         });
     }
 
     edit(req, res){
         const id = req.params.id;
-        const { name, email, password } = req.body;
+        const { name, email, password, birthdate } = req.body;
 
-        if(!name || !email || !password){
+        if(!name && !email && !password && !birthdate){
             res.status(400).send({ message: 'Missing fields' });
             return;
         }
 
-        if(password.length < 6){
-            res.status(400).send({ message: 'Password must be at least 6 characters long' });
-            return;
+        if(password){
+            if(password.length < 6){
+                res.status(400).send({ message: 'Password must be at least 6 characters long' });
+                return;
+            }
         }
 
         User.findById(id).then((user) => {
             if(user){
-                user.name = name;
-                user.email = email;
-                user.password = bcrypt.hashSync(password, 10);
+                if (name) {
+                    user.name = name;
+                }
+                if (email) {
+                    user.email = email;
+                }
+                if (birthdate) {
+                    user.birthdate = birthdate;
+                }
+                if (password) {
+                    user.password = bcrypt.hashSync(password, 10);
+                }
                 user.save().then(() => {
                     res.send(user);
                 }).catch((err) => {
-                    res.sendStatus(500);
-                    console.log(err);
+                    res.status(500).send({ message: 'Error while saving the user' });
                 });
             } else {
                 res.status(404).send({});
             }
         }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
+            res.status(500).send({ message: 'Error while searching the user' });
         });
     }
 
@@ -101,8 +106,7 @@ class UsersController {
                 res.status(404).send({});
             }
         }).catch((err) => {
-            res.sendStatus(500);
-            console.log(err);
+            res.status(500).send({ message: 'Error while searching the user' });
         });
     }
 }
