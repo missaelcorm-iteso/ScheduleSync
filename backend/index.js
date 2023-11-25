@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const pdfParser = require('./src/utils/pdf-parser');
 require('dotenv').config();
 
 const app = express();
@@ -25,9 +24,13 @@ app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
 app.use('/', routes);
 
-app.get('', (req, res) => {
+app.get('/', (req, res) => {
     res.send("Request received");
 });
+
+app.get('/home', (req, res) => {
+    res.sendFile('/app/ScheduleSync/frontend/public/index.html');
+})
 
 
 mongoose.connect(MONGO_URI).then((client) => {

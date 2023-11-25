@@ -17,6 +17,8 @@ const storage = multer.diskStorage({
     }
 });
 
+//path library
+
 const upload = multer({ storage: storage});
 
 router.use(express.json());
