@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-
+const pdfParser = require('./src/utils/pdf-parser');
 require('dotenv').config();
 
 const app = express();
 
-const routes = require('./src/routes');
+const userRoutes = require('./src/routes/user');
 
 const {
     MONGO_PROTOCOL,
@@ -23,10 +23,21 @@ const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
-app.use('', routes);
+app.use('/user', userRoutes);
 
 app.get('', (req, res) => {
     res.send("Request received");
+});
+
+app.post('/parse-pdf', async(req, res) => {
+    const filePath = '';
+
+    try{
+        const parsedData = await pdfParser(filePath);
+        res.json({success: true, data: parsedData});
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message});
+    }
 });
 
 mongoose.connect(MONGO_URI).then((client) => {
@@ -36,3 +47,4 @@ mongoose.connect(MONGO_URI).then((client) => {
 }).catch((err) => {
     console.log(err);
 });
+
