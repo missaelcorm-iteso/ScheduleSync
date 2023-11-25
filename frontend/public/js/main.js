@@ -3,6 +3,11 @@ const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId'
 const path_no_auth = ['/', '/login.html', '/register.html', '/index.html'];
 
 // If the user is not logged in, redirect to the login page
+
+
+//Check this part again please, I get the token part but it makes more sense for them
+//To visit the homepage and then register before having to login immediately.
+
 if (!token && path_no_auth.indexOf(window.location.pathname) === -1) {
     alert('You must be logged in to view this page.');
     window.location.replace('./login.html');
