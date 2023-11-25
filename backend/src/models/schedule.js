@@ -1,4 +1,4 @@
-const {model, Schema} = require('mongoose');
+const { model, Schema } = require('mongoose');
 
 const scheduleEntrySchema = new Schema({
     day:{type: String, required: true },
@@ -10,9 +10,9 @@ const scheduleEntrySchema = new Schema({
 
   
 
-const scheduleSchema = new mongoose.Schema({
+const scheduleSchema = new Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },

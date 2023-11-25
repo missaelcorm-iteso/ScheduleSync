@@ -1,8 +1,8 @@
-const schedule = require('./../models/schedule');
 const Schedule = require('./../models/schedule');
 const User = require('./../models/user');
 
 class ScheduleController {
+
     list(req, res) {
       const userId = req.user.id;
 
@@ -22,7 +22,7 @@ class ScheduleController {
         if (user) {
           const newSchedule = new Schedule({
             userId,
-            scheduleData: [{ day, startTime, endTime, className, classroom}]
+            scheduleData: { day, startTime, endTime, className, classroom}
           });
 
           newSchedule.save().then(() => {
@@ -42,7 +42,7 @@ class ScheduleController {
 
     show(req, res){
       const userId = req.user.id;
-      const schduleId = req.params.scheduleId;
+      const scheduleId = req.params.scheduleId;
 
       Schedule.findOne({ _id: scheduleId, userId}).then((schedule) => {
         if(schedule) {
