@@ -1,42 +1,60 @@
-const Schedule = require('../models/schedule');
+const schedule = require('./../models/schedule');
+const Schedule = require('./../models/schedule');
+const User = require('./../models/user');
 
-const createScheduleEntry = async (req, res) => {
-  try {
-    const { userId, day, startTime, endTime, className, classroom } = req.body;
-    
-    const scheduleEntry = {
-      day,
-      startTime,
-      endTime,
-      className,
-      classroom,
-    };
+class ScheduleController {
+    list(req, res) {
+      const userId = req.user.id;
 
-    const userSchedule = await Schedule.findOneAndUpdate(
-      { user: userId },
-      { $push: { scheduleData: scheduleEntry } },
-      { new: true, upsert: true }
-    );
+      Schedule.find({userId}).then((schedule) => {
+        res.send(schedule);
+      }).catch((error) => {
+        res.status(500).send({message: 'There was an error getting your schedule...'});
+        console.log(error);
+      })
+    }
 
-    res.json({ success: true, userSchedule });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
+    create(req, res) {
+      const { day, startTime, endTime, className, classroom} = req.body;
+      const userId = req.user.id;
 
-const getUserSchedule = async (req, res) => {
-  try {
-    const { userId } = req.params;
+      User.findById(userId).then((user) => {
+        if (user) {
+          const newSchedule = new Schedule({
+            userId,
+            scheduleData: [{ day, startTime, endTime, className, classroom}]
+          });
 
-    const userSchedule = await Schedule.findOne({ user: userId });
+          newSchedule.save().then(() => {
+            res.status(201).send({ message: 'Schedule created'});
+          }).catch((error) => {
+            res.status(500).send({message: 'There was an error creating your schedule...'});
+            console.log(error);
+          });
+        } else {
+          res.status(404).send({ message: 'User not found :/'});
+        }
+      }).catch((error) => {
+        res.status(500).send({ message: 'Error getting user'});
+        console.log(err);
+      });
+    }
 
-    res.json({ success: true, userSchedule });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
+    show(req, res){
+      const userId = req.user.id;
+      const schduleId = req.params.scheduleId;
 
-module.exports = {
-  createScheduleEntry,
-  getUserSchedule,
-};
+      Schedule.findOne({ _id: scheduleId, userId}).then((schedule) => {
+        if(schedule) {
+          res.send(schedule);
+        } else {
+          res.status(404).send({});
+        }
+      }).catch((error) => {
+          res.status(500).send({ message: 'There was an error getting your schedule'});
+          console.log(error);
+      })
+    }
+}
+
+module.exports = new ScheduleController();

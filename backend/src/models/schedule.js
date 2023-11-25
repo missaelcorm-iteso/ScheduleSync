@@ -1,27 +1,13 @@
-const mongoose = require('mongoose');
+const {model, Schema} = require('mongoose');
 
-const scheduleEntrySchema = new mongoose.Schema({
-    day: {
-      type: String, // Assuming the day is represented as a string (e.g., 'Monday')
-      required: true,
-    },
-    startTime: {
-      type: String, // Assuming time is represented as a string (e.g., '9:00 AM')
-      required: true,
-    },
-    endTime: {
-      type: String,
-      required: true,
-    },
-    className: {
-      type: String,
-      required: true,
-    },
-    classroom: {
-      type: String,
-      required: true,
-    },
-  });
+const scheduleEntrySchema = new Schema({
+    day:{type: String, required: true },
+    startTime: { type: String, required: true},
+    endTime: { type: String, required: true},
+    className: { type: String, required: true},
+    classroom: { type: String, required: true}
+})
+
   
 
 const scheduleSchema = new mongoose.Schema({
@@ -30,9 +16,13 @@ const scheduleSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    scheduleData: [scheduleEntrySchema],
+    scheduleData: [scheduleEntrySchema]
 });
 
-const Schedule = mongoose.model('Schedule', scheduleSchema);
 
-module.exports = Schedule;
+module.exports = model('Schedule', scheduleSchema);
+
+
+
+
+//module.exports = model('users', userSchema);
