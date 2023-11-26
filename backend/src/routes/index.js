@@ -8,6 +8,7 @@ const loginController = require('./../controllers/login');
 const scheduleController = require('./../controllers/schedule');
 const pdfParser = require('./../utils/pdf-parser');
 
+//This is a middleware for the pdf file
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, 'uploads/');
@@ -62,6 +63,7 @@ router.get('/schedule', scheduleController.list);
 router.get('/users/:scheduleId', authMiddleware, scheduleController.show);
 
 //Shared activities
+
 
 
 module.exports = router;

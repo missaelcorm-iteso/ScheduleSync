@@ -6,6 +6,7 @@ const userSchema = new Schema({
     password: { type: String, required: true },
     role: { type: String, default: 'user' },
     birthdate: { type: Date, required: true },
+    friends: [{type: Schema.Types.ObjectId, ref: 'user'}]
 });
 
 module.exports = model('users', userSchema);

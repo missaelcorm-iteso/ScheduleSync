@@ -11,18 +11,9 @@ const scheduleEntrySchema = new Schema({
   
 
 const scheduleSchema = new Schema({
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
     scheduleData: [scheduleEntrySchema]
 });
 
 
 module.exports = model('Schedule', scheduleSchema);
-
-
-
-
-//module.exports = model('users', userSchema);

@@ -8,11 +8,11 @@ $(document).ready(function () {
         filenameDisplay.text(filename);
     });
 });
-//this should disappear after the pdf is loaded, at least I hope.
+//this should disappear after the pdf is uploaded, at least I hope.
 
 $(document).ready(function () {
-    const userId = '123'; //Replace with the actual user ID
-  const scheduleContainer = $('#scheduleContainer');
+    const userId = '123'; 
+    const scheduleContainer = $('#scheduleContainer');
 
 
   function fetchSchedule() {
