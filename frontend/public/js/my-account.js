@@ -14,7 +14,7 @@ $(document).ready(function() {
 
     $.ajax({
         type: "GET",
-        url: `http://localhost:4000/users/${userId}`,
+        url: `${API_URL}/users/${userId}`,
         contentType: "application/json",
         headers: {
             Authorization: `${token}`
@@ -87,7 +87,7 @@ $(document).ready(function() {
 
                 $.ajax({
                     type: "PUT",
-                    url: `http://localhost:4000/users/${userId}`,
+                    url: `${API_URL}/users/${userId}`,
                     contentType: "application/json",
                     headers: {
                         Authorization: `${token}`

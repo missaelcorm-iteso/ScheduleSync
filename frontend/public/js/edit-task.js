@@ -53,7 +53,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'PUT',
-            url: `http://localhost:4000/activities/${_id}`,
+            url: `${API_URL}/activities/${_id}`,
             contentType: 'application/json',
             headers: {
                 Authorization: `${token}`
