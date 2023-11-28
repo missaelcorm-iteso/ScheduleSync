@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 
 const User = require('./../models/user');
+const file = require('./../models/file');
 
 class UsersController {
     list(req, res){
