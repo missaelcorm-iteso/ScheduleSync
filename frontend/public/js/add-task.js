@@ -26,7 +26,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:4000/activities',
+            url: `${API_URL}/activities`,
             contentType: 'application/json',
             headers: {
                 Authorization: `${token}`

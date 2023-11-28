@@ -3,7 +3,7 @@ $(document).ready(() => {
     const fetchData = () => {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `http://localhost:4000/activities/today`,
+                url: `${API_URL}/activities/today`,
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`
@@ -57,7 +57,7 @@ $(document).ready(() => {
                 }
 
                 $.ajax({
-                    url: `http://localhost:4000/activities/${task._id}/complete`,
+                    url: `${API_URL}/activities/${task._id}/complete`,
                     method: 'POST',
                     headers: {
                         Authorization: `${token}`
@@ -80,7 +80,7 @@ $(document).ready(() => {
                 }
 
                 $.ajax({
-                    url: `http://localhost:4000/activities/${task._id}/uncomplete`,
+                    url: `${API_URL}/activities/${task._id}/uncomplete`,
                     method: 'POST',
                     headers: {
                         Authorization: `${token}`
@@ -99,7 +99,7 @@ $(document).ready(() => {
                 e.preventDefault();
 
                 $.ajax({
-                    url: `http://localhost:4000/activities/${task._id}`,
+                    url: `${API_URL}/activities/${task._id}`,
                     method: 'DELETE',
                     headers: {
                         Authorization: `${token}`

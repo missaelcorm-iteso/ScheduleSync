@@ -29,7 +29,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:4000/users',
+            url: `${API_URL}/users`,
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: (data) => {
