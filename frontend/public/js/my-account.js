@@ -75,8 +75,26 @@ $(document).ready(function() {
             
                 const profilePictureInput = $('#profilePicture')[0];
                 if (profilePictureInput.files.length > 0) {
-                    const newProfilePicture = URL.createObjectURL(profilePictureInput.files[0]);
-                    $('#userInfo').find('img').attr('src', newProfilePicture);
+                    const profilePicture = profilePictureInput.files[0];
+                    const formData = new FormData();
+                    formData.append('file', profilePicture);
+
+                    $.ajax({
+                        type: "POST",
+                        url: `${API_URL}/users/${userId}/upload`,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            Authorization: `${token}`
+                        },
+                        data: formData,
+                        success: (data) => {
+                            alert('Profile picture uploaded successfully');
+                        },
+                        error: (err) => {
+                            console.error(err);
+                        }
+                    });
                 }
 
                 const name = $('#name').val();
