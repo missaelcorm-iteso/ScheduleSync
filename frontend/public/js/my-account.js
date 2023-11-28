@@ -20,6 +20,36 @@ $(document).ready(function() {
             Authorization: `${token}`
         },
         success: (data) => {
+            const profilePicture = () => {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        type: "GET",
+                        url: `${API_URL}/users/${userId}/uploads`,
+                        contentType: "application/json",
+                        headers: {
+                            Authorization: `${token}`
+                        },
+                        success: (data) => {
+                            resolve(data);
+                        },
+                        error: (err) => {
+                            console.error(err);
+                            reject(err);
+                        }
+                    });
+                });
+            };
+
+            profilePicture().then((data) => {
+                if (data.length > 0) {
+                    const profilePicture = data[data.length - 1];
+                    const profilePictureUrl = `${API_URL}/assets/${profilePicture.filename}`;
+                    $('#userInfo').find('img').attr('src', profilePictureUrl);
+                }
+            }).catch((err) => {
+                console.error(err);
+            });
+
             const birthdate = new Date(data.birthdate).toISOString().split('T')[0];
             data.birthdate = new Date(data.birthdate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             const html = compiledTemplate(data);
