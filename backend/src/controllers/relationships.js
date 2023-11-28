@@ -41,14 +41,27 @@ class relationshipController{
             return;
         }
 
-        Relationship.findByIdAndUpdate(id, { user1, user2, type}, { new: true }).then((updatedRelationship) => {
-            if(!updatedRelationship) {
-                res.status(404).send({ message: 'Relationship not found'});
+        Relationship.findById(id).then((relationship) => {
+            if(relationship) {
+                if(user1){
+                    relationship.user1 = user1;
+                }
+                if(user2){
+                    relationship.user2 = user2;
+                }
+                if(type){
+                    relationship.type = type;
+                }
+                relationship.save().then(() => {
+                    res.send(relationship);
+                }).catch((err) => {
+                    res.status(500).send({ message: 'Error while saving the relationship'});
+                });
             } else {
-                res.send(updatedRelationship);
+                res.status(404).send({});
             }
         }).catch((err) => {
-            res.status(500).send({ message: 'Error updating the relationship'});
+            res.status(500).send({ message: 'Error while finding the relationship' });
         });
     }
 
@@ -67,4 +80,4 @@ class relationshipController{
     }
 }
 
-module.exports = new RelationshipController();
+module.exports = new relationshipController();
