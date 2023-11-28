@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -23,6 +23,7 @@ const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
+app.use('/assets', express.static(path.join(__dirname, 'uploads')));
 app.use('', routes);
 
 app.get('', (req, res) => {

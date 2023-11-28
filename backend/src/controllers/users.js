@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 
 const User = require('./../models/user');
+const file = require('./../models/file');
 
 class UsersController {
     list(req, res){
@@ -107,6 +110,41 @@ class UsersController {
             }
         }).catch((err) => {
             res.status(500).send({ message: 'Error while searching the user' });
+        });
+    }
+
+    upload(req, res){
+        const id = req.params.id;
+        const filename = req.file;
+
+        if(!filename){
+            res.status(400).send({ message: 'File not supported' });
+            return;
+        }
+
+        file.create({
+            userId: id,
+            name: req.file.originalname,
+            filename: req.file.filename,
+            path: req.file.path,
+            size: req.file.size,
+            mimetype: req.file.mimetype,
+            created_at: Date.now(),
+        }).then((file) => {
+            res.send(file);
+        }).catch((err) => {
+            const uri = path.join(__dirname, `./../uploads/${req.file.filename}`);
+            fs.unlinkSync(uri);
+            res.status(500).send({ message: 'Error while saving the file' });
+        })
+    }
+
+    attachments(req, res){
+        const id = req.params.id;
+        file.find({ userId: id }).then((files) => {
+            res.send(files);
+        }).catch((err) => {
+            res.status(500).send({ message: 'Error while searching the files' });
         });
     }
 }
