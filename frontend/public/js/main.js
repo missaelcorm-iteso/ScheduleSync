@@ -47,7 +47,7 @@ $(function() {
 
     $('#body').removeAttr('hidden');
 
-    $('#navbar-items').on('click', 'li.nav-item:nth-child(6)', (e) => {
+    $('#navbar-items').on('click', 'li.nav-item:nth-child(11)', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');
