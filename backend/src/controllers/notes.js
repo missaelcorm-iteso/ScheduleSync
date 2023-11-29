@@ -34,7 +34,7 @@ class NotesController{
 
     show(req, res) {
         const id = req.params.id;
-        Note.findById(noteId).then((note) => {
+        Note.findById(id).then((note) => {
             if(!note) {
                 res.status(404).send({ message: 'Note not found'});
                 return;
