@@ -26,7 +26,6 @@ body {
 
 
 .copyright-section {
-    color: black;
     text-align: left;
     padding: 10px 0;
     position: relative;
@@ -35,6 +34,7 @@ body {
 }
 
 .cp-text{
+    color:#fff;
     margin: 10px;
     font-size: 20px;
 }
