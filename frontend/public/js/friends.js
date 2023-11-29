@@ -18,7 +18,7 @@ $(document).ready(() => {
         friendsList.empty();
 
         friends.forEach((friend) => {
-            const listItem = `<li class="list-group-item">${friend.name}</li>`;
+            const listItem = `<li class="list-group">${friend.name}</li>`;
             friendsList.append(listItem);
         });
     };
