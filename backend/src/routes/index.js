@@ -13,7 +13,7 @@ router.use(express.json());
 router.post('/login', loginController.login);
 
 // Users
-router.get('/users', authMiddleware, usersController.list);
+router.get('/users', authMiddleware,usersController.list);
 router.post('/users', usersController.create);
 router.put('/users/:id', authMiddleware, usersController.edit);
 router.delete('/users/:id', authMiddleware, usersController.delete);
@@ -38,10 +38,10 @@ router.delete('/relationship/:id', authMiddleware, relationshipController.delete
 router.get('/relationship/:id', authMiddleware, relationshipController.show);
 
 //Notes
-router.get('/notes', NotesController.list);
+router.get('/notes', authMiddleware,NotesController.list);
 router.post('/notes', NotesController.create);
-router.get('/notes/:id', NotesController.show);
-router.put('/notes/:id', NotesController.edit);
-router.delete('/notes/:id', NotesController.delete);
+router.get('/notes/:id', authMiddleware,NotesController.show);
+router.put('/notes/:id', authMiddleware,NotesController.edit);
+router.delete('/notes/:id', authMiddleware,NotesController.delete);
 
 module.exports = router;

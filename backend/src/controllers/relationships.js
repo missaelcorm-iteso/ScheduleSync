@@ -10,12 +10,27 @@ class relationshipController{
     }
 
     create(req, res) {
-        const { user1, user2, type } = req.body;
+        const { name } = req.body;
 
-        if(!user1 || !user2 || !type){
+        if(!name){
             res.status(400).send({ message: 'Missing fields'});
             return;
         }
+
+        Relationship.findOne({ name }).then((existingRelationship) => {
+            if (existingRelationship) {
+                res.status(400).send({ message: 'Friend already added' });
+            } else {
+                const newRelationship = new Relationship({ name });
+                newRelationship.save().then(() => {
+                    res.status(201).send({ message: 'Friend added' });
+                }).catch((err) => {
+                    res.status(500).send({ message: 'Error while saving your friend' });
+                });
+            }
+        }).catch((err) => {
+            res.status(500).send({ message: 'Error while searching for your friend' });
+        });
     }
 
     show(req, res) {
@@ -34,9 +49,9 @@ class relationshipController{
 
     edit(req, res) {
         const { id } = req.params.id;
-        const { user1, user2, type} = req.body;
+        const { user1, user2, name} = req.body;
 
-        if(!user1 || !user2 || !type){
+        if(!name){
             res.status(400).send({ message: 'Missing fields'});
             return;
         }

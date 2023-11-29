@@ -12,7 +12,7 @@ class NotesController{
     create(req, res) {
         const { taskName, description, createdBy} = req.body;
 
-        if(!taskName || !description || !createdBy){
+        if(!taskName || !description){
             res.status(400).send({ message: 'Missing fields'});
             return;
         }
@@ -21,7 +21,7 @@ class NotesController{
                 res.status(400).send({ message: 'Task already exist' });
                 return;
             }
-            const newNote = new Note({ taskName, description, createdBy});
+            const newNote = new Note({ taskName, description});
             newNote.save().then(() => {
                 res.status(201).send({ message: 'Note created' });
             }).catch((err) => {
