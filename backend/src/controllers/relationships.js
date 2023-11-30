@@ -32,45 +32,55 @@ class relationshipController{
                     console.log('user not found.')
                     return;
                 }
+
                 const token = req.headers.authorization;
                 console.log(token);
-                console.log(process.env.SECRET_KEY);
-                const decoded = jwt.verify(token, secretkey);
-                console.log('hi from token');
-                const query = {
-                    $or: [
-                        { user1: decoded.id, user2: friend.id },
-                        { user1: friend.id, user2: decoded.id },
-                    ],
-                };
-    
-                console.log('Query:', query);
-    
-                Relationship.findOne(query)
-                    .then((existingRelationship) => {
-                        console.log('Existing Relationship:', existingRelationship);
-                        if (existingRelationship) {
-                            res.status(400).send({ message: 'Friend already added' });
-                        } else {
-                            const newRelationship = new Relationship({
-                                user1: req.user.id,
-                                user2: friend.id
-                            });
-    
-                            newRelationship.save()
-                                .then(() => {
-                                    res.status(201).send({ message: 'Friend added' });
-                                })
-                                .catch((err) => {
-                                    console.error('Error while saving your friend:', err);
-                                    res.status(500).send({ message: 'Error while saving your friend' });
+                jwt.verify(token, secretkey, (err, decoded) => {
+                    if(err) {
+                        console.log('JWT error: ', err);
+                        res.status(401).send('invalid token');
+                        return
+                    }
+
+
+                    console.log('hi from token', decoded);
+                    const query = {
+                        $or: [
+                            { user1: decoded.id, user2: friend.id },
+                            { user1: friend.id, user2: decoded.id },
+                        ],
+                    };
+        
+                    console.log('Query:', query);
+        
+                    Relationship.findOne(query)
+                        .then((existingRelationship) => {
+                            console.log('Existing Relationship:', existingRelationship);
+                            if (existingRelationship) {
+                                res.status(400).send({ message: 'Friend already added' });
+                            } else {
+                                const newRelationship = new Relationship({
+                                    user1: req.user.id,
+                                    user2: friend.id
                                 });
-                        }
-                    })
-                    .catch((err) => {
-                        console.error('Error while searching for your friend:', err);
-                        res.status(500).send({ message: 'Error while searching for your friend' });
-                    });
+        
+                                newRelationship.save()
+                                    .then(() => {
+                                        res.status(201).send({ message: 'Friend added' });
+                                    })
+                                    .catch((err) => {
+                                        console.error('Error while saving your friend:', err);
+                                        res.status(500).send({ message: 'Error while saving your friend' });
+                                    });
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('Error while searching for your friend:', err);
+                            res.status(500).send({ message: 'Error while searching for your friend' });
+                        });
+                });
+
+                
             })
             .catch((err) => {
                 console.error('Error while checking friend existence:', err);
