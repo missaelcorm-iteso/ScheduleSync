@@ -32,7 +32,7 @@ router.post('/activities/:activityId/uncomplete', activitiesController.uncomplet
 
 //Relationships
 router.get('/relationships', authMiddleware, relationshipController.list);
-router.post('/relationships', relationshipController.create);
+router.post('/relationships', authMiddleware,relationshipController.create);
 router.put('/relationships/:id', authMiddleware, relationshipController.edit);
 router.delete('/relationship/:id', authMiddleware, relationshipController.delete);
 router.get('/relationship/:id', authMiddleware, relationshipController.show);

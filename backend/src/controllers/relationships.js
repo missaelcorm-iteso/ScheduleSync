@@ -1,4 +1,5 @@
 const Relationship = require('./../models/relationships');
+const User = require('./../models/user');
 
 class relationshipController{
     list(req, res){
@@ -11,27 +12,62 @@ class relationshipController{
 
     create(req, res) {
         const { name } = req.body;
-
-        if(!name){
-            res.status(400).send({ message: 'Missing fields'});
+    
+        if (!name) {
+            res.status(400).send({ message: 'Missing fields' });
             return;
         }
-
-        Relationship.findOne({ name }).then((existingRelationship) => {
-            if (existingRelationship) {
-                res.status(400).send({ message: 'Friend already added' });
-            } else {
-                const newRelationship = new Relationship({ name });
-                newRelationship.save().then(() => {
-                    res.status(201).send({ message: 'Friend added' });
-                }).catch((err) => {
-                    res.status(500).send({ message: 'Error while saving your friend' });
-                });
-            }
-        }).catch((err) => {
-            res.status(500).send({ message: 'Error while searching for your friend' });
-        });
+    
+        User.findOne({ name })
+            .then((friend) => {
+                if (!friend) {
+                    res.status(404).send({ message: 'User not found' });
+                    return;
+                }
+    
+                const query = {
+                    $or: [
+                        { user1: req.user.id, user2: friend.id },
+                        { user1: friend.id, user2: req.user.id },
+                    ],
+                };
+                //debugging reason
+                console.log('Query:', query);
+    
+                Relationship.findOne(query)
+                    .then((existingRelationship) => {
+                        console.log('Existing Relationship:', existingRelationship);
+                        if (existingRelationship) {
+                            res.status(400).send({ message: 'Friend already added' });
+                        } else {
+                            const newRelationship = new Relationship({
+                                user1: req.user.id,
+                                user2: friend.id,
+                                name,
+                            });
+    
+                            newRelationship.save()
+                                .then(() => {
+                                    res.status(201).send({ message: 'Friend added' });
+                                })
+                                .catch((err) => {
+                                    console.error('Error while saving your friend:', err);
+                                    res.status(500).send({ message: 'Error while saving your friend' });
+                                });
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('Error while searching for your friend:', err);
+                        res.status(500).send({ message: 'Error while searching for your friend' });
+                    });
+            })
+            .catch((err) => {
+                console.error('Error while checking friend existence:', err);
+                res.status(500).send({ message: 'Error while checking friend existence' });
+            });
     }
+    
+    
 
     show(req, res) {
         const { id } = req.params.id;
