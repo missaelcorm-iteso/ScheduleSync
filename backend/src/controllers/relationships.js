@@ -11,14 +11,14 @@ class relationshipController{
     }
 
     create(req, res) {
-        const { name } = req.body;
+        const { email } = req.body;
     
-        if (!name) {
+        if (!email) {
             res.status(400).send({ message: 'Missing fields' });
             return;
         }
     
-        User.findOne({ name })
+        User.findOne({ email })
             .then((friend) => {
                 if (!friend) {
                     res.status(404).send({ message: 'User not found' });
@@ -42,8 +42,7 @@ class relationshipController{
                         } else {
                             const newRelationship = new Relationship({
                                 user1: req.user.id,
-                                user2: friend.id,
-                                name,
+                                user2: friend.id
                             });
     
                             newRelationship.save()
