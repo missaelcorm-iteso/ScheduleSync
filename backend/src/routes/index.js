@@ -2,6 +2,7 @@ const express = require('express');
 const router = require('express').Router();
 
 const authMiddleware = require('./../middlewares/auth');
+const fileMiddleware = require('./../middlewares/file');
 
 const usersController = require('./../controllers/users');
 const activitiesController = require('./../controllers/activities');
@@ -18,6 +19,8 @@ router.post('/users', usersController.create);
 router.put('/users/:id', authMiddleware, usersController.edit);
 router.delete('/users/:id', authMiddleware, usersController.delete);
 router.get('/users/:id', authMiddleware, usersController.show);
+router.post('/users/:id/upload', authMiddleware, fileMiddleware.single('file'), usersController.upload);
+router.get('/users/:id/uploads', authMiddleware, usersController.attachments);
 
 // Activities
 router.use('/activities', authMiddleware);

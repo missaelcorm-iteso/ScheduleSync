@@ -6,6 +6,7 @@ $(document).ready(() => {
         const email = $('#email').val();
         const password = $('#password').val();
         const confirmPassword = $('#confirm-password').val();
+        const birthdate = $('#birthdate').val();
 
         if (password !== confirmPassword) {
             const error = $('#error');
@@ -24,7 +25,8 @@ $(document).ready(() => {
         const data = {
             name,
             email,
-            password
+            password,
+            birthdate
         };
 
         $.ajax({
@@ -33,7 +35,8 @@ $(document).ready(() => {
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: (data) => {
-                window.location.href = '/index.html';
+                alert('Account created successfully');
+                window.location.href = '/login.html';
             },
             error: (err) => {
                 try {
