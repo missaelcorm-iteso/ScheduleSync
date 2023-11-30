@@ -35,14 +35,14 @@ router.post('/activities/:activityId/complete', activitiesController.complete);
 router.post('/activities/:activityId/uncomplete', activitiesController.uncomplete);
 
 //Relationships
-router.get('/relationships', authMiddleware, relationshipController.list);
-router.post('/relationships/:id', authMiddleware,relationshipController.create);
+router.get('/relationships', relationshipController.list);
+router.post('/relationships/', relationshipController.create);
 router.put('/relationships/:id', authMiddleware, relationshipController.edit);
 router.delete('/relationship/:id', authMiddleware, relationshipController.delete);
 router.get('/relationship/:id', authMiddleware, relationshipController.show);
 
 //Notes
-router.get('/notes', authMiddleware,notesController.list);
+router.get('/notes', notesController.list);
 router.post('/notes', notesController.create);
 router.get('/notes/:id', authMiddleware,notesController.show);
 router.put('/notes/:id', authMiddleware,notesController.edit);

@@ -1,5 +1,8 @@
 const Relationship = require('./../models/relationships');
 const User = require('./../models/user');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 
 class relationshipController{
     list(req, res){
@@ -12,9 +15,13 @@ class relationshipController{
 
     create(req, res) {
         const { name } = req.body;
+        const secretkey = process.env.SECRET_KEY;
+
+        console.log(name);
     
         if (!name) {
             res.status(400).send({ message: 'Missing fields' });
+            console.log('im here');
             return;
         }
     
@@ -22,13 +29,18 @@ class relationshipController{
             .then((friend) => {
                 if (!friend) {
                     res.status(404).send({ message: 'User not found' });
+                    console.log('user not found.')
                     return;
                 }
-    
+                const token = req.headers.authorization;
+                console.log(token);
+                console.log(process.env.SECRET_KEY);
+                const decoded = jwt.verify(token, secretkey);
+                console.log('hi from token');
                 const query = {
                     $or: [
-                        { user1: req.user.id, user2: friend.id },
-                        { user1: friend.id, user2: req.user.id },
+                        { user1: decoded.id, user2: friend.id },
+                        { user1: friend.id, user2: decoded.id },
                     ],
                 };
     
@@ -42,8 +54,7 @@ class relationshipController{
                         } else {
                             const newRelationship = new Relationship({
                                 user1: req.user.id,
-                                user2: friend.id,
-                                name,
+                                user2: friend.id
                             });
     
                             newRelationship.save()

@@ -10,7 +10,7 @@ class notesController{
     }
 
     create(req, res) {
-        const { taskName, description, createdBy} = req.body;
+        const { taskName, description} = req.body;
 
         if(!taskName || !description){
             res.status(400).send({ message: 'Missing fields'});
