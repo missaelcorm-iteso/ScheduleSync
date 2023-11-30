@@ -25,6 +25,10 @@ $(function() {
         <li class="nav-item"> <a class="nav-link" href="today.html">Today</a> </li>
         <li class="nav-item"> <a class="nav-link" href="todo.html">ToDo</a> </li>
         <li class="nav-item"> <a class="nav-link" href="add-task.html">Add Task</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="friends.html">Friends</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="add-friend.html">Add a Friend</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="add-note.html">Add Note</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="notes.html">Notes</a> </li>
         <li class="nav-item"> <a class="nav-link" href="#">Logout</a> </li>
         {{else}}
         <li class="nav-item"> <a class="nav-link" href="login.html">Login</a> </li>
@@ -44,7 +48,7 @@ $(function() {
 
     $('#body').removeAttr('hidden');
 
-    $('#navbar-items').on('click', 'li.nav-item:nth-child(6)', (e) => {
+    $('#navbar-items').on('click', 'li.nav-item:nth-child(11)', (e) => {
         e.preventDefault();
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');

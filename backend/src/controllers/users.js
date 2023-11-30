@@ -17,7 +17,7 @@ class UsersController {
     create(req, res){
         const { name, email, password, birthdate } = req.body;
 
-        if(!name || !email || !password || !birthdate){
+        if(!name || !email || !password){
             res.status(400).send({ message: 'Missing fields' });
             return;
         }
