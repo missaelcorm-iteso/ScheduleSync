@@ -11,14 +11,14 @@ class relationshipController{
     }
 
     create(req, res) {
-        const { email } = req.body;
+        const { name } = req.body;
     
-        if (!email) {
+        if (!name) {
             res.status(400).send({ message: 'Missing fields' });
             return;
         }
     
-        User.findOne({ email })
+        User.findOne({ name })
             .then((friend) => {
                 if (!friend) {
                     res.status(404).send({ message: 'User not found' });
@@ -31,7 +31,7 @@ class relationshipController{
                         { user1: friend.id, user2: req.user.id },
                     ],
                 };
-                //debugging reason
+    
                 console.log('Query:', query);
     
                 Relationship.findOne(query)
@@ -42,7 +42,8 @@ class relationshipController{
                         } else {
                             const newRelationship = new Relationship({
                                 user1: req.user.id,
-                                user2: friend.id
+                                user2: friend.id,
+                                name,
                             });
     
                             newRelationship.save()
@@ -65,6 +66,8 @@ class relationshipController{
                 res.status(500).send({ message: 'Error while checking friend existence' });
             });
     }
+    
+    
     
     
 

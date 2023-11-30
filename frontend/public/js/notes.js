@@ -32,7 +32,6 @@ $(document).ready(() => {
     };
 
     fetchNotes().then((notes) => {
-        // Add any additional logic or event handlers as needed
     }).catch((error) => {
         console.error('Error fetching notes:', error);
     });

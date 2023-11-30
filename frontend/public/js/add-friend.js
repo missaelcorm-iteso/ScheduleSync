@@ -4,10 +4,6 @@ $(document).ready(() => {
 
         const name = $('#friendName');
 
-        const data = {
-            name: name.val()
-        };
-
         $.ajax({
             type: 'POST',
             url: 'http://localhost:4000/relationships',
@@ -15,21 +11,17 @@ $(document).ready(() => {
             headers: {
                 Authorization: `${token}`
             },
-            data: JSON.stringify(data),
-            success: (data) => {
+            data: JSON.stringify({ name: name.val() }),
+            success: () => {
                 name.val('');
                 alert('Friend added successfully');
             },
             error: (err) => {
                 try {
                     const errorMessage = err.responseJSON.message;
-                    const error = $('#error');
-                    error.text(errorMessage);
-                    error.removeClass('hidden');
+                    $('#error').text(errorMessage).removeClass('hidden');
                 } catch (e) {
-                    const error = $('#error');
-                    error.text("Something went wrong");
-                    error.removeClass('hidden');
+                    $('#error').text('Something went wrong').removeClass('hidden');
                 }
             }
         });

@@ -1,6 +1,6 @@
 const Note = require('./../models/notes');
 
-class NotesController{
+class notesController{
     list(req, res) {
         Note.find().then((notes) => {
             res.send(notes);
@@ -94,5 +94,5 @@ class NotesController{
     }
 }
 
-module.exports = new NotesController();
+module.exports = new notesController();
 
