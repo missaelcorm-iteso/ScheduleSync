@@ -1,7 +1,8 @@
 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 const userId = localStorage.getItem('userId') || sessionStorage.getItem('userId');
 const path_no_auth = ['/', '/login.html', '/register.html', '/index.html'];
-const API_URL = 'https://schedulesync.onrender.com';
+//const API_URL = 'https://schedulesync.onrender.com';
+const API_URL = 'http://localhost:4000';
 
 // If the user is not logged in, redirect to the login page
 if (!token && path_no_auth.indexOf(window.location.pathname) === -1) {

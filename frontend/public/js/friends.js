@@ -2,7 +2,7 @@ $(document).ready(() => {
     const fetchFriends = () => {
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:4000/relationships',
+            url: `${API_URL}/relationships`,
             headers: { Authorization: `${token}` },
             success: (friends) => {
                 renderFriendsList(friends);

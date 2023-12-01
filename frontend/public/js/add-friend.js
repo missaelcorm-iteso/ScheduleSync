@@ -6,7 +6,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:4000/relationships',
+            url: `${API_URL}/relationships`,
             contentType: 'application/json',
             headers: {
                 Authorization: `${token}`

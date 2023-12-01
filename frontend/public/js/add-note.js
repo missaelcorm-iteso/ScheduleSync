@@ -12,7 +12,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:4000/notes',
+            url: `${API_URL}/notes`,
             contentType: 'application/json',
             headers: {
                 Authorization: `${token}`

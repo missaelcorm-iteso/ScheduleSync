@@ -3,7 +3,7 @@ $(document).ready(() => {
     const fetchNotes = () => {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: 'http://localhost:4000/notes',
+                url: `${API_URL}/notes`,
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`
