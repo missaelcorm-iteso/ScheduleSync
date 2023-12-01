@@ -13,7 +13,7 @@ $(document).ready(() => {
 
         $.ajax({
             type: 'POST',
-            url: `${API_URL}/login`,
+            url: 'http:localhost:4000/login',
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: (data) => {
