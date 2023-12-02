@@ -62,20 +62,6 @@ class notesController{
         });
     }    
 
-    show(req, res) {
-        const noteId = req.params.id;
-        Note.findById(noteId).then((note) => {
-            if(!note) {
-                res.status(404).send({ message: 'Note not found'});
-                return;
-            }
-            res.send(note);
-        }).catch((err) => {
-            res.status(500).send({ message: 'Error getting the note'})
-        });
-        
-    }
-
     
 
     delete(req, res) {

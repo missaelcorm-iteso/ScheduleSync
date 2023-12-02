@@ -112,53 +112,7 @@ class relationshipController{
             });
     }
     
-
-    show(req, res) {
-        const { id } = req.params.id;
-
-        Relationship.findById(id).then((relationship) => {
-            if(!relationship) {
-                res.status(404).send({ message: 'Relationship not found'});
-            } else {
-                res.send(relationship);
-            }
-        }).catch((err) => {
-            res.status(500).send({ message: 'Error getting the relationship'})
-        });
-    }
-
-    edit(req, res) {
-        const { id } = req.params.id;
-        const { user1, user2, name} = req.body;
-
-        if(!name){
-            res.status(400).send({ message: 'Missing fields'});
-            return;
-        }
-
-        Relationship.findById(id).then((relationship) => {
-            if(relationship) {
-                if(user1){
-                    relationship.user1 = user1;
-                }
-                if(user2){
-                    relationship.user2 = user2;
-                }
-                if(type){
-                    relationship.type = type;
-                }
-                relationship.save().then(() => {
-                    res.send(relationship);
-                }).catch((err) => {
-                    res.status(500).send({ message: 'Error while saving the relationship'});
-                });
-            } else {
-                res.status(404).send({});
-            }
-        }).catch((err) => {
-            res.status(500).send({ message: 'Error while finding the relationship' });
-        });
-    }
+    
 
     delete(req, res) {
         const token = req.headers.authorization;
