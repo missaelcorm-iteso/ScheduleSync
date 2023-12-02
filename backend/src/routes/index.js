@@ -34,15 +34,16 @@ router.post('/activities/:activityId/complete', activitiesController.complete);
 router.post('/activities/:activityId/uncomplete', activitiesController.uncomplete);
 
 //Relationships
+router.use('/relationships', authMiddleware);
 router.get('/relationships', relationshipController.list);
 router.post('/relationships', relationshipController.create);
-router.delete('/relationships/:id', authMiddleware, relationshipController.delete);
-router.get('/relationships/:id', authMiddleware, relationshipController.show);
+router.delete('/relationships/:id', relationshipController.delete);
+
 
 //Notes
+router.use('/notes', authMiddleware);
 router.get('/notes', notesController.list);
 router.post('/notes', notesController.create);
-router.get('/notes/:id', authMiddleware, notesController.show);
-router.delete('/notes/:id', authMiddleware, notesController.delete);
+router.delete('/notes/:id', notesController.delete);
 
 module.exports = router;
