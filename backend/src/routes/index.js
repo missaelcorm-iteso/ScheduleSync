@@ -2,7 +2,6 @@ const express = require('express');
 const router = require('express').Router();
 const authMiddleware = require('./../middlewares/auth');
 const fileMiddleware = require('./../middlewares/file');
-
 const usersController = require('./../controllers/users');
 const activitiesController = require('./../controllers/activities');
 const relationshipController = require('./../controllers/relationships');
@@ -37,15 +36,13 @@ router.post('/activities/:activityId/uncomplete', activitiesController.uncomplet
 //Relationships
 router.get('/relationships', relationshipController.list);
 router.post('/relationships', relationshipController.create);
-router.put('/relationships/:id', authMiddleware, relationshipController.edit);
-router.delete('/relationship/:id', authMiddleware, relationshipController.delete);
-router.get('/relationship/:id', authMiddleware, relationshipController.show);
+router.delete('/relationships/:id', authMiddleware, relationshipController.delete);
+router.get('/relationships/:id', authMiddleware, relationshipController.show);
 
 //Notes
 router.get('/notes', notesController.list);
 router.post('/notes', notesController.create);
-router.get('/notes/:id', authMiddleware,notesController.show);
-router.put('/notes/:id', authMiddleware,notesController.edit);
-router.delete('/notes/:id', authMiddleware,notesController.delete);
+router.get('/notes/:id', authMiddleware, notesController.show);
+router.delete('/notes/:id', authMiddleware, notesController.delete);
 
 module.exports = router;

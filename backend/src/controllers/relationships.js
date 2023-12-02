@@ -5,13 +5,37 @@ require('dotenv').config();
 
 
 class relationshipController{
-    list(req, res){
-        Relationship.find().then((relationships) => {
-            res.send(relationships);
-        }).catch((err) => {
-            res.status(500).send({ message: 'There was an error getting the relationship.'});
-        })
-    }
+    list(req, res) {
+        const token = req.headers.authorization;
+        const secretkey = process.env.SECRET_KEY;
+        
+        jwt.verify(token, secretkey, (err, decoded) => {
+            if(err) {
+                console.log('JWT error: ', err);
+                res.status(401).send('invalid token');
+                return
+            }
+
+            const query = {
+                $or: [
+                    { user1: decoded.id },
+                    { user2: decoded.id },
+                ],
+            };
+
+            console.log('Query:', query);
+
+            Relationship.find(query).populate('user1 user2').then((relationships) => {
+                const friends = relationships.map((relationship) => {
+                    return relationship.user1._id.toString() === decoded.id ? relationship.user2 : relationship.user1;
+                });
+                res.send(friends);
+            }).catch((err) => {
+                console.error('Error while getting your friends:', err);
+                res.status(500).send({ message: 'Error while getting your friends' });
+            })
+        }
+    )};
 
     create(req, res) {
         const { name } = req.body;
@@ -60,7 +84,7 @@ class relationshipController{
                                 res.status(400).send({ message: 'Friend already added' });
                             } else {
                                 const newRelationship = new Relationship({
-                                    user1: req.user.id,
+                                    user1: decoded.id,
                                     user2: friend.id
                                 });
         
@@ -87,9 +111,6 @@ class relationshipController{
                 res.status(500).send({ message: 'Error while checking friend existence' });
             });
     }
-    
-    
-    
     
 
     show(req, res) {
@@ -140,17 +161,34 @@ class relationshipController{
     }
 
     delete(req, res) {
-        const { id } = req.params.id;
+        const token = req.headers.authorization;
+        const secretkey = process.env.SECRET_KEY;
+        const friendId = req.params.id;
 
-        Relationship.findByIdAndDelete(id).then((deletedRelationship) => {
-            if(!deletedRelationship) {
-                res.status(404).send({ message: 'Relationship not found'});
-            } else {
-                res.send({ message: 'Relation deleted successfully'});
+        jwt.verify(token, secretkey, (err, decoded) => {
+            if(err) {
+                console.log('JWT error: ', err);
+                res.status(401).send('invalid token');
+                return;
             }
-        }).catch((err) => {
-            res.status(500).send({ message: 'Error deleting the relationship'});
-        });
+
+            const  query = {
+                $or: [
+                    {user1: decoded.id, user2: friendId},
+                    {user2: friendId, user2: decoded.id}
+                ]
+            };
+
+            Relationship.findOneAndDelete(query).then((deletedRelationship) => {
+                if(!deletedRelationship) {
+                    res.status(404).send({ message: 'Friend not found'});
+                } else {
+                    res.send({ message: 'Friend deleted successfully'});
+                }
+            }).catch((err) => {
+                res.status(500).send({ message: 'Error deleting the friend'});
+            })
+        })
     }
 }
 
