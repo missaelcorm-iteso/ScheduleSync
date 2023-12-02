@@ -20,9 +20,29 @@
             <div class="card-header">
                 <h2>Your Friends</h2>
             </div>
-            <ul id="friendsList" class="list-group">
+            <div id="friendAccordion">
+                <ul id="friendsList" class="list-group">
                 
-            </ul>
+                </ul>
+            </div>
+            <script id="friend-template" type="text/x-handlebars-template">
+                <div class="card">
+                    <div class="card-header" id="heading{{_id}}" style="background-color: aliceblue;">
+                        <h5 class="mb-0">
+                            <!--Im adding the styles here so that it's not overun.-->
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{_id}}" aria-expanded="true" aria-controls="collapse{{_id}}" style="color: #007bff">
+                                {{name}}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse{{_id}}" class="collapse" aria-labelledby="heading{{_id}}" data-parent="#friendsList">
+                        <div class="card-body">
+                            <button class="delete-friend" data-id="{{_id}}" style="background-color: red; border: none; font-size: 1rem; color: white;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </script>
+        
         </div>
     </div>
 

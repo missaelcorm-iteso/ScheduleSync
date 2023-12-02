@@ -28,8 +28,8 @@ $(function() {
         <li class="nav-item"> <a class="nav-link" href="add-task.html">Add Task</a> </li>
         <li class="nav-item"> <a class="nav-link" href="friends.html">Friends</a> </li>
         <li class="nav-item"> <a class="nav-link" href="add-friend.html">Add a Friend</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="add-note.html">Add Note</a> </li>
         <li class="nav-item"> <a class="nav-link" href="notes.html">Notes</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="add-note.html">Add Note</a> </li>
         <li class="nav-item"> <a class="nav-link" href="#">Logout</a> </li>
         {{else}}
         <li class="nav-item"> <a class="nav-link" href="login.html">Login</a> </li>

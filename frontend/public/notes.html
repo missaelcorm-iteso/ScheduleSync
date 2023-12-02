@@ -17,14 +17,19 @@
     <div class="container mt-5">
         <h2>Your Notes</h2>
 
-        <ul id="notesList" class="list-group">
+        <ul id="notesList" class="list-group"></ul>
 
-        </ul>
+        <script id="noteTemplate" type="text/x-handlebars-template">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{taskName}} - {{description}}
+                <button class="btn btn-danger delete-note" data-id="{{_id}}">Delete</button>
+            </li>
+        </script>
 
     </div>
 
     <div class="container mt-3">
-        <div class="card">
+        <div class="line">
             
         </div>
     </div>
