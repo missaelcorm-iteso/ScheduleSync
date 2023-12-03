@@ -10,7 +10,7 @@ class UsersController {
         User.find().then((users) => {
             res.send(users);
         }).catch((err) => {
-            res.status(500).send({ message: 'Error while searching the users' });
+            res.status(500).send({ message: 'Error while searching the users', err });
         });
     }
 

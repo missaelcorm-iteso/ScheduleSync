@@ -1,7 +1,5 @@
 const Relationship = require('./../models/relationships');
 const User = require('./../models/user');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 
 class relationshipController{
@@ -15,8 +13,6 @@ class relationshipController{
             ]
         }
     
-        console.log('Query:', query);
-    
         Relationship.find(query).populate('user1 user2').then((relationships) => {
             const friends = relationships.map((relationship) => {
                 return relationship.user1._id.toString() === userId ? relationship.user2 : relationship.user1;
@@ -29,14 +25,14 @@ class relationshipController{
     };
 
     create(req, res) {
-        const { name } = req.body;
+        const { email } = req.body;
         const userId = req.user.id;
 
-        if(!name){
+        if(!email){
             res.status(400).send({ message: 'Missing fields'});
             return;
         }
-        User.findOne({ name}).then((friend) => {
+        User.findOne({ email }).then((friend) => {
             if(!friend){
                 res.status(404).send({ message: 'User not found'});
                 console.log('user not found');
@@ -49,7 +45,6 @@ class relationshipController{
                     {user1: friend.id, user2: userId}
                 ]
             }
-            console.log('Query:', query);
 
             Relationship.findOne(query).then((exisitingRelationship) => {
                 if(exisitingRelationship){
@@ -97,7 +92,7 @@ class relationshipController{
                 res.send({ message: 'Friend deleted successfully'});
             }
         }).catch((err) => {
-            res.status(500).send({ message: 'Error deleting the friend'});
+            res.status(500).send({ message: 'Error deleting the friend', err});
         })
     }
 }

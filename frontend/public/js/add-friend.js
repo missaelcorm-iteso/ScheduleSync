@@ -2,7 +2,7 @@ $(document).ready(() => {
     $('#add-friend-form').submit((e) => {
         e.preventDefault();
 
-        const name = $('#friendName');
+        const email = $('#friendEmail');
 
         $.ajax({
             type: 'POST',
@@ -11,9 +11,9 @@ $(document).ready(() => {
             headers: {
                 Authorization: `${token}`
             },
-            data: JSON.stringify({ name: name.val() }),
+            data: JSON.stringify({ email: email.val() }),
             success: () => {
-                name.val('');
+                email.val('');
                 alert('Friend added successfully');
             },
             error: (err) => {
