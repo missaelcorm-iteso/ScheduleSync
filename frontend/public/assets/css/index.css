@@ -1,0 +1,40 @@
+body {
+    background-image: url(https://images.unsplash.com/photo-1700402214532-914b944d9e38?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+.feature-section {
+    margin: 70px;
+    margin-top: 150px;
+}
+
+.carousel-item {
+    min-height: 75vh;
+}
+
+#carouselExample{
+    margin-bottom: 200px;
+    height: 40vh;
+}
+
+.text-center {
+    height: 65vh;
+    text-align: center;
+}
+
+
+.copyright-section {
+    text-align: left;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.cp-text{
+    color:#fff;
+    margin: 10px;
+    font-size: 20px;
+}
