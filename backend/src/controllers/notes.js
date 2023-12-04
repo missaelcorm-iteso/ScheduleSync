@@ -14,17 +14,17 @@ class notesController{
     }
 
     create(req, res) {
-        const { taskName, description} = req.body;
+        const { noteName, description} = req.body;
         const userId  = req.user.id;
 
-            if(!taskName || !description){
+            if(!noteName || !description){
             res.status(400).send({ message: 'Missing fields'});
                 return;
             }
         
             User.findById(userId).then((user) => {
                 if(user) {
-                    const note = new Note({ taskName, description, userId});
+                    const note = new Note({ noteName, description, userId});
                     note.save().then(() => {
                         res.status(201).send({ message: 'Note created successfully'});
                     }).catch((err) => {
