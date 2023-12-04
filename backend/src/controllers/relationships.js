@@ -92,7 +92,7 @@ class relationshipController{
                 res.send({ message: 'Friend deleted successfully'});
             }
         }).catch((err) => {
-            res.status(500).send({ message: 'Error deleting the friend', err});
+            res.status(500).send({ message: 'Error deleting the friend'});
         })
     }
 }

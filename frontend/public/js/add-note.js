@@ -2,11 +2,11 @@ $(document).ready(() => {
     $('#add-note-form').submit((e) => {
         e.preventDefault();
 
-        const taskName = $('#title').val();
+        const noteName = $('#title').val();
         const description = $('#content').val();
 
         const data = {
-            taskName: taskName,
+            noteName: noteName,
             description: description
         };
 
