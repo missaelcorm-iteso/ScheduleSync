@@ -7,8 +7,11 @@ const activitiesController = require('./../controllers/activities');
 const relationshipController = require('./../controllers/relationships');
 const notesController = require('./../controllers/notes');
 const loginController = require('./../controllers/login');
+const { promController, increment, duration } = require('./../controllers/prom');
 
 router.use(express.json());
+router.use(increment);
+router.use(duration);
 
 //Auth
 router.post('/login', loginController.login);
@@ -45,5 +48,8 @@ router.use('/notes', authMiddleware);
 router.get('/notes', notesController.list);
 router.post('/notes', notesController.create);
 router.delete('/notes/:id', notesController.delete);
+
+//Metrics
+router.get('/metrics', promController.metrics);
 
 module.exports = router;
