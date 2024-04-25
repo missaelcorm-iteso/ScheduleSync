@@ -21,8 +21,8 @@ node {
         }
     }
     
-    stage('Trigger ManifestUpdate') {
-                echo "triggering schedulesync-api-update-manifest job"
-                build job: 'schedulesync-api-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-        }
+    // stage('Trigger ManifestUpdate') {
+    //             echo "triggering schedulesync-api-update-manifest job"
+    //             build job: 'schedulesync-api-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+    //     }
 }
