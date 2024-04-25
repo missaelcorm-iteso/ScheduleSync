@@ -1,28 +1,30 @@
 node {
-    def app
+    dir("backend") {
+        def app
 
-    stage('Clone repository') {
-        checkout scm
-    }
-
-    stage('Build image') {
-       app = docker.build("missaelcorm/schedulesync-api")
-    }
-
-    stage('Test image') {
-        app.inside {
-            sh 'echo "Tests passed"'
+        stage('Clone repository') {
+            checkout scm
         }
-    }
 
-    stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-missaelcorm') {
-            app.push("${env.BUILD_NUMBER}")
+        stage('Build image') {
+        app = docker.build("missaelcorm/schedulesync-api")
         }
+
+        stage('Test image') {
+            app.inside {
+                sh 'echo "Tests passed"'
+            }
+        }
+
+        stage('Push image') {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-missaelcorm') {
+                app.push("${env.BUILD_NUMBER}")
+            }
+        }
+        
+        // stage('Trigger ManifestUpdate') {
+        //             echo "triggering schedulesync-api-update-manifest job"
+        //             build job: 'schedulesync-api-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+        //     }
     }
-    
-    // stage('Trigger ManifestUpdate') {
-    //             echo "triggering schedulesync-api-update-manifest job"
-    //             build job: 'schedulesync-api-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
-    //     }
 }
