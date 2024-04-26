@@ -46,5 +46,18 @@ jobs:
         push: true
         # List of tags
         tags: ${{ vars.DOCKER_IMAGE }}:${{ github.event.inputs.docker_tag }}
+
+  trigger_deploy:
+    runs-on: [self-hosted, schedulesync]
+    needs: [build_and_push]
+    steps:
+    - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
+      run: |
+        curl -X POST https://api.github.com/repos/${{ vars.SCHEDULESYNC_DEVOPS_REPO }}/dispatches \
+        -H 'Accept: application/vnd.github.everest-preview+json' \
+        -u ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }} \
+        --data '{"event_type": "Trigger Workflow", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }, "vars": { "docker_tag": "latest" }}'
+        
+    
         
           
