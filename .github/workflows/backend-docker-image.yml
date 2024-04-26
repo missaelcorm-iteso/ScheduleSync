@@ -15,10 +15,7 @@ jobs:
       SCHEDULESYNC_API_DIR: "backend/"
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Set working directory
-      working-directory: ${{ env.SCHEDULESYNC_API_DIR }}
+      uses: actions/checkout@v3
       
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -42,7 +39,7 @@ jobs:
       uses: docker/build-push-action@v5.3.0
       with:
         # Build's context is the set of files located in the specified PATH or URL
-        context: .
+        context: ./${{ env.SCHEDULESYNC_API_DIR }}
         # Path to the Dockerfile
         file: Dockerfile
         # Push is a shorthand for --output=type=registry
