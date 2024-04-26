@@ -41,7 +41,7 @@ jobs:
         # Build's context is the set of files located in the specified PATH or URL
         context: ./${{ env.SCHEDULESYNC_API_DIR }}
         # Path to the Dockerfile
-        file: Dockerfile
+        file: ./${{ env.SCHEDULESYNC_API_DIR }}/Dockerfile
         # Push is a shorthand for --output=type=registry
         push: true
         # List of tags
