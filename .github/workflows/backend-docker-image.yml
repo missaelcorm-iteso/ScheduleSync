@@ -58,7 +58,7 @@ jobs:
     - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
       run: |
         curl -X POST https://api.github.com/repos/${{ vars.SCHEDULESYNC_DEVOPS_REPO }}/dispatches \
-        -H 'Accept: application/vnd.github.everest-preview+json' \
+        -H 'Accept: application/vnd.github.v3+json' \
         -H 'Authorization: token ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}' \
         --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", docker_image: "${{ env.DOCKER_IMAGE }}" }}'
         
