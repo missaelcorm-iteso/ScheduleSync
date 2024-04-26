@@ -52,7 +52,7 @@ jobs:
     needs: [build_and_push]
     env:
       DOCKER_IMAGE: ${{ vars.DOCKER_IMAGE }}
-      DOCKER_TAG: 'latest'
+      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
       WORKFLOW_NAME: 'deploy-schedulesync-api'
     steps:
     - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
