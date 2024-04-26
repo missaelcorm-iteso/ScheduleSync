@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Backend Docker Image CI
 
 on:
   workflow_dispatch:
@@ -11,6 +11,8 @@ on:
 jobs:     
   build_and_push:
     runs-on: [self-hosted, docker, schedulesync]
+    env: 
+      SCHEDULESYNC_API_DIR: "backend/"
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -31,9 +33,9 @@ jobs:
       uses: docker/build-push-action@v5.3.0
       with:
         # Build's context is the set of files located in the specified PATH or URL
-        context: .
+        context: ${{ env.SCHEDULESYNC_API_DIR }}
         # Path to the Dockerfile
-        file: backend/Dockerfile
+        file: Dockerfile
         # Push is a shorthand for --output=type=registry
         push: true
         # List of tags
