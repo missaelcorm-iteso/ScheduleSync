@@ -58,8 +58,9 @@ jobs:
     - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
       run: |
         curl -X POST https://api.github.com/repos/${{ vars.SCHEDULESYNC_DEVOPS_REPO }}/dispatches \
-        -H 'Accept: application/vnd.github.v3+json' \
-        -H 'Authorization: token ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}' \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
         --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", docker_image: "${{ env.DOCKER_IMAGE }}" }}'
         
     
