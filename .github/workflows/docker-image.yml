@@ -37,6 +37,6 @@ jobs:
         # Push is a shorthand for --output=type=registry
         push: true
         # List of tags
-        tags: ${{ env.DOCKER_IMAGE }}:${{ github.event.inputs.docker_tag }}
+        tags: ${{ vars.DOCKER_IMAGE }}:${{ github.event.inputs.docker_tag }}
         
           
