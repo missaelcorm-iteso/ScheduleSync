@@ -7,26 +7,23 @@ const activitiesController = require('./../controllers/activities');
 const relationshipController = require('./../controllers/relationships');
 const notesController = require('./../controllers/notes');
 const loginController = require('./../controllers/login');
-const { promController, increment, duration } = require('./../controllers/prom');
 
 router.use(express.json());
-// router.use(increment);
-// router.use(duration);
 
 //Auth
 router.post('/login', loginController.login);
 
 // Users
-router.get('/users', authMiddleware, increment, duration, usersController.list);
-router.post('/users', increment, duration, usersController.create);
-router.put('/users/:id', authMiddleware, increment, duration, usersController.edit);
-router.delete('/users/:id', authMiddleware, increment, duration, usersController.delete);
-router.get('/users/:id', authMiddleware, increment, duration, usersController.show);
-router.post('/users/:id/upload', authMiddleware, increment, duration, fileMiddleware.single('file'), usersController.upload);
-router.get('/users/:id/uploads', authMiddleware, increment, duration, usersController.attachments);
+router.get('/users', authMiddleware, usersController.list);
+router.post('/users', usersController.create);
+router.put('/users/:id', authMiddleware, usersController.edit);
+router.delete('/users/:id', authMiddleware, usersController.delete);
+router.get('/users/:id', authMiddleware, usersController.show);
+router.post('/users/:id/upload', authMiddleware, fileMiddleware.single('file'), usersController.upload);
+router.get('/users/:id/uploads', authMiddleware, usersController.attachments);
 
 // Activities
-router.use('/activities', authMiddleware, increment, duration);
+router.use('/activities', authMiddleware);
 router.get('/activities', activitiesController.list);
 router.get('/activities/today', activitiesController.today);
 router.post('/activities', activitiesController.create);
@@ -37,19 +34,15 @@ router.post('/activities/:activityId/complete', activitiesController.complete);
 router.post('/activities/:activityId/uncomplete', activitiesController.uncomplete);
 
 //Relationships
-router.use('/relationships', authMiddleware, increment, duration);
+router.use('/relationships', authMiddleware);
 router.get('/relationships', relationshipController.list);
 router.post('/relationships', relationshipController.create);
 router.delete('/relationships/:id', relationshipController.delete);
 
-
 //Notes
-router.use('/notes', authMiddleware, increment, duration);
+router.use('/notes', authMiddleware);
 router.get('/notes', notesController.list);
 router.post('/notes', notesController.create);
 router.delete('/notes/:id', notesController.delete);
-
-//Metrics
-router.get('/metrics', increment, duration, promController.metrics);
 
 module.exports = router;
