@@ -73,7 +73,7 @@ app.use((req, res, next) => {
 app.use('', routes);
 
 app.get('', (req, res) => {
-    res.send("Request received");
+    res.send({"message": "Request received"});
 });
 
 mongoose.connect(MONGO_URI).then((client) => {
