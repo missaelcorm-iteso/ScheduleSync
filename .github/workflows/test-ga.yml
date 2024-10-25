@@ -19,10 +19,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Print SCHEDULESYNC_API_DIR
-      run: echo "Backend is at: ${{ env.SCHEDULESYNC_API_DIR }}"
+      run: |
+        echo "Backend is at: ${{ env.SCHEDULESYNC_API_DIR }}"
       
     - name: Print input text
-      run: echo "Input text: ${{ github.event.inputs.text }}"
+      run: |
+        echo "Input text: ${{ github.event.inputs.text }}"
 
     - name: Print python version
-      run: python --version
+      run: |
+        python --version
