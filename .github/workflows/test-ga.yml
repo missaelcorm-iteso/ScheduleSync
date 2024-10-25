@@ -7,6 +7,10 @@ on:
         description: 'Write some test'
         required: true
         default: 'Hello World'
+      sleep_time:
+        description: 'Sleep in seconds'
+        required: true
+        default: "60"
 
 jobs:     
   print_text:
@@ -29,3 +33,7 @@ jobs:
     - name: Print python version
       run: |
         python --version
+
+    - name: Sleep
+      run: |
+        sleep ${{ github.event.inputs.sleep_time }}
