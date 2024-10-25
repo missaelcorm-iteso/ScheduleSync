@@ -11,7 +11,7 @@ on:
 jobs:     
   print_text:
     runs-on: [ubuntu-latest]
-    container: python:3.9-alpine3.19⁠
+    container: "python:3.9-alpine3.19"
     env: 
       SCHEDULESYNC_API_DIR: "backend/"
     steps:
