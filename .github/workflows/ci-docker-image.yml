@@ -39,9 +39,9 @@ jobs:
     - name: Set Docker Context
       run: |
         if [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-api" ]; then
-          echo "DOCKER_CONTEXT=backend" >> $GITHUB_ENV
+          echo "DOCKER_LOCAL_CONTEXT=backend" >> $GITHUB_ENV
         elif [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-web" ]; then
-          echo "DOCKER_CONTEXT=frontend" >> $GITHUB_ENV
+          echo "DOCKER_LOCAL_CONTEXT=frontend" >> $GITHUB_ENV
         fi
 
     - name: Docker Login
@@ -60,9 +60,9 @@ jobs:
       uses: docker/build-push-action@v5.3.0
       with:
         # Build's context is the set of files located in the specified PATH or URL
-        context: ./${{ env.DOCKER_CONTEXT }}
+        context: ./${{ env.DOCKER_LOCAL_CONTEXT }}
         # Path to the Dockerfile
-        file: ./${{ env.DOCKER_CONTEXT }}/Dockerfile
+        file: ./${{ env.DOCKER_LOCAL_CONTEXT }}/Dockerfile
         # Push is a shorthand for --output=type=registry
         push: true
         # List of tags
