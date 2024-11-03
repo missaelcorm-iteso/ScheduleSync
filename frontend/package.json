@@ -1,0 +1,19 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Frontend for schedulesync app",
+  "main": "index.js",
+  "scripts": {
+    "start": "sed -i \"s@{{API_URL}}@${APP_API_URL}@g\" ./public/js/main.js && node .",
+    "dev": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
