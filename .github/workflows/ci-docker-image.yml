@@ -70,7 +70,7 @@ jobs:
 
   trigger_deploy:
     runs-on: [ubuntu-latest]
-    if: ${{ github.event.inputs.deploy-k8s }} == true
+    if: github.event.inputs.deploy-k8s == true
     needs: [build_and_push]
     env:
       DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
