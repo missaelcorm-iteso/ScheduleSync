@@ -8,8 +8,8 @@ on:
         required: true
         type: choice
         options:
-          - 'schedulesync-api'
-          - 'schedulesync-web'
+          - 'missaelcorm/schedulesync-api'
+          - 'missaelcorm/schedulesync-web'
       docker_tag:
         description: 'Docker image tag'
         required: true
@@ -38,9 +38,9 @@ jobs:
 
     - name: Set Docker Context
       run: |
-        if [ "${{ env.DOCKER_IMAGE }}" == "schedulesync-api" ]; then
+        if [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-api" ]; then
           echo "DOCKER_CONTEXT=backend" >> $GITHUB_ENV
-        elif [ "${{ env.DOCKER_IMAGE }}" == "schedulesync-web" ]; then
+        elif [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-web" ]; then
           echo "DOCKER_CONTEXT=frontend" >> $GITHUB_ENV
         fi
 
