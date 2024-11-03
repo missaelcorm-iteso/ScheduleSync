@@ -1,13 +1,23 @@
 version: '3'
 services:
-  nodejs:
-    image: node:18
-    volumes:
-      - .:/app
+  schedulesync-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - path: ./backend/.env
+        required: true
     ports:
       - "3000:3000"
-      - "8080:8080"
       - "9100:9100"
-    stdin_open: true 
-    tty: true
-    command: ["python3", "-m", "http.server", "-d", "/app/frontend/public", "8080"]
+
+  schedulesync-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - APP_API_URL=http://schedulesync-api:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - schedulesync-api
