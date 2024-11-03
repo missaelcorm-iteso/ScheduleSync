@@ -69,7 +69,7 @@ jobs:
         tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}"
 
   trigger_deploy:
-    runs-on: [self-hosted, schedulesync]
+    runs-on: [ubuntu-latest]
     if: ${{ github.event.inputs.deploy-k8s }}
     needs: [build_and_push]
     env:
