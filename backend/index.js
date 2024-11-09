@@ -25,7 +25,6 @@ const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
-app.use('/assets', express.static(path.join(__dirname, 'uploads')));
 
 app.use(
     responseTime((req, res, time) => {

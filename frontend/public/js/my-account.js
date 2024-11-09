@@ -42,8 +42,8 @@ $(document).ready(function() {
 
             profilePicture().then((data) => {
                 if (data.length > 0) {
-                    const profilePicture = data[data.length - 1];
-                    const profilePictureUrl = `${API_URL}/assets/${profilePicture.filename}`;
+                    const profilePicture = data[0];
+                    const profilePictureUrl = `${profilePicture.url}`;
                     $('#userInfo').find('img').attr('src', profilePictureUrl);
                 }
             }).catch((err) => {
