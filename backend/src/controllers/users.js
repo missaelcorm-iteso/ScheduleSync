@@ -142,7 +142,9 @@ class UsersController {
 
     attachments(req, res){
         const id = req.params.id;
-        file.find({ userId: id }).then((files) => {
+        file.find({ userId: id })
+        .sort({ created_at: -1 })
+        .then((files) => {
             res.send(files);
         }).catch((err) => {
             console.error('Error while searching the files', err);
