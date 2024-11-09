@@ -122,19 +122,20 @@ class UsersController {
             return;
         }
 
+        const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${req.file.key}`; 
+
         file.create({
             userId: id,
             name: req.file.originalname,
-            filename: req.file.filename,
-            path: req.file.path,
+            key: req.file.key,
+            url: fileUrl,
             size: req.file.size,
             mimetype: req.file.mimetype,
             created_at: Date.now(),
         }).then((file) => {
             res.send(file);
         }).catch((err) => {
-            const uri = path.join(__dirname, `./../uploads/${req.file.filename}`);
-            fs.unlinkSync(uri);
+            console.error('Error while saving the file', err);
             res.status(500).send({ message: 'Error while saving the file' });
         })
     }
@@ -144,6 +145,7 @@ class UsersController {
         file.find({ userId: id }).then((files) => {
             res.send(files);
         }).catch((err) => {
+            console.error('Error while searching the files', err);
             res.status(500).send({ message: 'Error while searching the files' });
         });
     }
