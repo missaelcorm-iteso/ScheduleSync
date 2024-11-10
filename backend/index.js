@@ -17,11 +17,12 @@ const {
     MONGO_DB,
     MONGO_USER,
     MONGO_PASS,
+    MONGO_ARGS
 } = process.env;
 
 const APP_PORT = process.env.APP_PORT || 3000;
 
-const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB}?retryWrites=true&w=majority`;
+const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB}?${MONGO_ARGS}`;
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
