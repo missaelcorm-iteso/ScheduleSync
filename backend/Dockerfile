@@ -10,11 +10,13 @@ FROM node:${NODE_VERSION}-alpine
 
 # Use production node environment by default.
 ENV NODE_ENV production
-
+ENV CERT_PATH /usr/src/app/certs/global-bundle.pem
 
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache curl
+
+RUN curl -L -o ${CERT_PATH} https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
