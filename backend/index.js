@@ -14,6 +14,7 @@ const routes = require('./src/routes');
 const {
     MONGO_PROTOCOL,
     MONGO_HOST,
+    MONGO_PORT,
     MONGO_DB,
     MONGO_USER,
     MONGO_PASS,
@@ -22,7 +23,9 @@ const {
 
 const APP_PORT = process.env.APP_PORT || 3000;
 
-const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB}?${MONGO_ARGS}`;
+const _MONGO_PORT = MONGO_PROTOCOL == "mongodb+srv" ? '' : `:${MONGO_PORT}`;
+
+const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}${_MONGO_PORT}/${MONGO_DB}?${MONGO_ARGS}`;
 
 app.use(cors({ origin: true })); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(express.json());
