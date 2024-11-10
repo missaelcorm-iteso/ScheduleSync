@@ -30,7 +30,7 @@ const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}
 
 let MONGO_CONNECTION_OPTIONS = {};
 
-if (CERT_PATH) {
+if (CERT_PATH && !MONGO_PROTOCOL == "mongodb+srv") {
     MONGO_CONNECTION_OPTIONS = {
         tls: true,
         tlsCAFile: path.resolve(CERT_PATH),
