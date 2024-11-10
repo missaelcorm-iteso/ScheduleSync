@@ -10,9 +10,12 @@ FROM node:${NODE_VERSION}-alpine
 
 # Use production node environment by default.
 ENV NODE_ENV production
-ENV CERT_PATH /usr/src/app/certs/global-bundle.pem
+ENV CERT_DIR /usr/src/app/certs
+ENV CERT_PATH ${CERT_DIR}/global-bundle.pem
 
 WORKDIR /usr/src/app
+
+RUN mkdir -p ${CERT_DIR}
 
 RUN apk add --no-cache curl
 
