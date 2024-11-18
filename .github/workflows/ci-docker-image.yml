@@ -32,7 +32,7 @@ jobs:
       DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -81,9 +81,6 @@ jobs:
         name: security-trivy-schedulesync-json-${{ github.sha }}
         path: trivy-results.json
 
-    - name: Create results directory
-      run: mkdir -p results
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
@@ -93,12 +90,13 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: 'codeql-${{ github.event.inputs.docker_image }}'
+        output: 'codeql-results.sarif' # Explicit output for CodeQL
 
-    - name: Upload CodeQL Results
+    - name: Upload CodeQL Results as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: codeql-analysis-results-${{ github.sha }}
-        path: results
+        name: security-codeql-schedulesync-sarif-${{ github.sha }}
+        path: codeql-results.sarif
         if-no-files-found: warn
 
   trigger_deploy:
