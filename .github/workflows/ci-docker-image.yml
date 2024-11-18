@@ -64,8 +64,8 @@ jobs:
         TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db:2'
       with:
         image-ref: '${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}'
-        format: 'json'  # Cambiar formato a JSON para exportar como artifact
-        output: 'trivy-results.json'  # Nombre del archivo JSON que se generará
+        format: 'json'
+        output: 'trivy-results.json'
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH,MEDIUM'
@@ -76,6 +76,25 @@ jobs:
       with:
         name: security-trivy-schedulesync-json-${{ github.sha }}
         path: trivy-results.json
+
+    # SAST integration with CodeQL
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: 'javascript'
+        config-file: .github/codeql-config.yml
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "security"
+        output: './artifacts/sast-report-${{ github.sha }}.sarif'
+
+    - name: Upload SAST Report as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: sast-report-schedulesync-${{ github.sha }}
+        path: './artifacts/sast-report-${{ github.sha }}.sarif'
 
   trigger_deploy:
     runs-on: ubuntu-latest
