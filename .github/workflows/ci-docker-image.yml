@@ -22,7 +22,7 @@ on:
 
 jobs:     
   build_and_push:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     env: 
       DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
       DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
@@ -45,27 +45,17 @@ jobs:
         fi
 
     - name: Docker Login
-      # You may pin to the exact commit or the version.
-      # uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20
       uses: docker/login-action@v3.1.0
       with:
-        # Username used to log against the Docker registry
         username: ${{ secrets.DOCKER_USER }}
-        # Password or personal access token used to log against the Docker registry
         password: ${{ secrets.DOCKER_PASSWORD }}
         
     - name: Build and push Docker images
-      # You may pin to the exact commit or the version.
-      # uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0
       uses: docker/build-push-action@v5.3.0
       with:
-        # Build's context is the set of files located in the specified PATH or URL
         context: ./${{ env.DOCKER_LOCAL_CONTEXT }}
-        # Path to the Dockerfile
         file: ./${{ env.DOCKER_LOCAL_CONTEXT }}/Dockerfile
-        # Push is a shorthand for --output=type=registry
         push: true
-        # List of tags
         tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}"
 
     - name: Run Trivy vulnerability scanner
@@ -74,15 +64,21 @@ jobs:
         TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db:2'
       with:
         image-ref: '${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}'
-        format: 'table'
-        exit-code: '1'
+        format: 'json'  # Cambiar formato a JSON para exportar como artifact
+        output: 'trivy-results.json'  # Nombre del archivo JSON que se generará
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH,MEDIUM'
       continue-on-error: true
 
+    - name: Upload Trivy scan results as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-trivy-schedulesync-json-${{ github.sha }}
+        path: trivy-results.json
+
   trigger_deploy:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     if: github.event.inputs.deploy-k8s == true
     needs: [build_and_push]
     env:
@@ -97,7 +93,3 @@ jobs:
         -H "Authorization: Bearer ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", "docker_image": "${{ env.DOCKER_IMAGE }}" }}'
-        
-    
-        
-          
