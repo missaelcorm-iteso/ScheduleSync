@@ -24,7 +24,7 @@ permissions:
   contents: read
   security-events: write
 
-jobs:     
+jobs:
   build_and_push:
     runs-on: ubuntu-latest
     env: 
@@ -32,7 +32,7 @@ jobs:
       DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -81,6 +81,9 @@ jobs:
         name: security-trivy-schedulesync-json-${{ github.sha }}
         path: trivy-results.json
 
+    - name: Create results directory
+      run: mkdir -p results
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
@@ -96,6 +99,7 @@ jobs:
       with:
         name: codeql-analysis-results-${{ github.sha }}
         path: results
+        if-no-files-found: warn
 
   trigger_deploy:
     runs-on: ubuntu-latest
