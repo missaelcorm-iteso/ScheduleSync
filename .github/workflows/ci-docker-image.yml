@@ -93,3 +93,22 @@ jobs:
         -H "Authorization: Bearer ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", "docker_image": "${{ env.DOCKER_IMAGE }}" }}'
+
+  notify_slack:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: Send notification to Slack
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        status: ${{ job.status }}
+        fields: |
+          {
+            "Job": "${{ github.job }}",
+            "Repository": "${{ github.repository }}",
+            "Ref": "${{ github.ref }}",
+            "Commit Message": "${{ github.event.head_commit.message }}",
+            "Committer": "${{ github.event.head_commit.committer.name }}"
+          }
