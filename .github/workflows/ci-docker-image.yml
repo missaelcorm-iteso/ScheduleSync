@@ -19,11 +19,6 @@ on:
         description: 'Deploy to Kubernetes'
         required: true
         default: false
-  pull_request:
-
-permissions:
-  contents: read
-  security-events: write
 
 jobs:     
   build_and_push:
@@ -82,24 +77,21 @@ jobs:
         name: security-trivy-schedulesync-json-${{ github.sha }}
         path: trivy-results.json
 
-    # SAST integration with CodeQL
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: 'javascript'
-        tools: '2.19.3'
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        category: "security"
-        output: './artifacts/sast-report-${{ github.sha }}.sarif'
+        category: 'codeql-${{ github.event.inputs.docker_image }}'
 
-    - name: Upload SAST Report as Artifact
+    - name: Upload CodeQL Results
       uses: actions/upload-artifact@v4
       with:
-        name: sast-report-schedulesync-${{ github.sha }}
-        path: './artifacts/sast-report-${{ github.sha }}.sarif'
+        name: codeql-analysis-results-${{ github.sha }}
+        path: results
 
   trigger_deploy:
     runs-on: ubuntu-latest
