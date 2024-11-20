@@ -125,15 +125,16 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_CHANNEL: '#notifications' # Canal de Slack
+        SLACK_CHANNEL: '#notifications'
         SLACK_USERNAME: 'CI Bot'
-        SLACK_MSG_AUTHOR: ${{ github.actor }}
-        SLACK_ICON_EMOJI: ':rocket:' # Emoji personalizado
+        SLACK_ICON_EMOJI: ':rocket:'
         SLACK_COLOR: ${{ job.status }}
         SLACK_TITLE: 'CI/CD Pipeline Notification'
-        SLACK_FOOTER: 'Powered by GitHub Actions'
         SLACK_MESSAGE: |
-          Pipeline for job `${{ github.job }}` in repository `${{ github.repository }}` completed.
-          - Ref: `${{ github.ref }}`
-          - Commit Message: ${{ github.event.head_commit.message || 'No commit message available' }}
-          - Committer: ${{ github.event.head_commit.committer.name || 'No committer info available' }}
+          *Pipeline Status*: ${{ job.status }}
+          *Workflow*: ${{ github.workflow }}
+          *Job Name*: ${{ github.job }}
+          *Repository*: ${{ github.repository }}
+          *Branch*: `${{ github.ref }}`
+          *Commit*: `${{ github.sha }}`
+        SLACK_FOOTER: 'Powered by GitHub Actions'
