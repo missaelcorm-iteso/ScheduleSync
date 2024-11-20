@@ -118,7 +118,7 @@ jobs:
 
   notify_slack:
     runs-on: ubuntu-latest
-    if: always()
+    needs: [build_and_push, trigger_deploy]
     steps:
     - name: Send notification to Slack
       uses: rtCamp/action-slack-notify@v2
