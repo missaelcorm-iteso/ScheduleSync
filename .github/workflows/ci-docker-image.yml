@@ -135,6 +135,5 @@ jobs:
         SLACK_MESSAGE: |
           Pipeline for job `${{ github.job }}` in repository `${{ github.repository }}` completed.
           - Ref: `${{ github.ref }}`
-          - Commit Message: `${{ github.event.head_commit.message }}`
-          - Committer: `${{ github.event.head_commit.committer.name }}`
-
+          - Commit Message: ${{ github.event.head_commit.message || 'No commit message available' }}
+          - Committer: ${{ github.event.head_commit.committer.name || 'No committer info available' }}
