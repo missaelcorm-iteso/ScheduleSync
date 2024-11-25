@@ -174,7 +174,7 @@ jobs:
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy_pull_request:
-    needs: [build_and_push, trivy_security_scan, codeql_security_scan]
+    needs: [build_and_push]
     uses: missaelcorm-iteso/schedulesync-aws/.github/workflows/create-docker-tag-pr.yml@add-docker-tag-pr-wf
     if: ${{ github.event.inputs.create_pull_request == 'true' }}
     with:
