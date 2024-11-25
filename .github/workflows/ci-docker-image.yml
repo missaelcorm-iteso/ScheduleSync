@@ -58,7 +58,7 @@ jobs:
         tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}"
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml
+      uses: ./.github/actions/slack-notify
       if: always()
       with:
         job_name: 'Build and Push Docker Image'
@@ -68,6 +68,7 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
+        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   trivy_security_scan:
     runs-on: ubuntu-latest
@@ -99,7 +100,7 @@ jobs:
         path: trivy-results.json
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml
+      uses: ./.github/actions/slack-notify
       if: always()
       with:
         job_name: 'Trivy Security Scan'
@@ -109,6 +110,7 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
+        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   codeql_security_scan:
     runs-on: ubuntu-latest
@@ -139,7 +141,7 @@ jobs:
         if-no-files-found: warn
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml
+      uses: ./.github/actions/slack-notify
       if: always()
       with:
         job_name: 'CodeQL Security Scan'
@@ -149,3 +151,4 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
+        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
