@@ -58,7 +58,7 @@ jobs:
         tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}"
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml@separate-ci-jobs
+      uses: ./.github/workflows/slack-notify.yml
       if: always()
       with:
         job_name: 'Build and Push Docker Image'
@@ -99,7 +99,7 @@ jobs:
         path: trivy-results.json
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml@separate-ci-jobs
+      uses: ./.github/workflows/slack-notify.yml
       if: always()
       with:
         job_name: 'Trivy Security Scan'
@@ -139,7 +139,7 @@ jobs:
         if-no-files-found: warn
 
     - name: Send notification to Slack
-      uses: ./.github/workflows/slack-notify.yml@separate-ci-jobs
+      uses: ./.github/workflows/slack-notify.yml
       if: always()
       with:
         job_name: 'CodeQL Security Scan'
