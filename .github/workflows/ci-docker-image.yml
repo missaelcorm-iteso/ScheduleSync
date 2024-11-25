@@ -14,6 +14,18 @@ on:
         description: 'Docker image tag'
         required: true
         default: 'latest'
+      create_pull_request:
+        description: 'Create a pull request to merge the changes'
+        required: false
+        default: false
+        type: boolean
+      environment:
+        description: 'Environment to deploy the image'
+        required: false
+        default: 'dev'
+        type: choice
+        options:
+          - 'dev'
 
 permissions:
   contents: read
@@ -155,3 +167,16 @@ jobs:
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy_pull_request:
+    needs: [build_and_push, trivy_security_scan, codeql_security_scan]
+    uses: missaelcorm-iteso/schedulesync-aws/.github/workflows/create-docker-tag-pr.yml@add-docker-tag-pr-wf
+    if: ${{ github.event.inputs.create_pull_request == 'true' }}
+    with:
+      service: 
+      docker_tag: ${{ github.event.inputs.docker_tag }}
+      github_repository: ${{ github.repository }}
+      github_actor: ${{ github.actor }}
+      environment: ${{ github.event.inputs.environment }}
+    secrets:
+      GITHUB_TOKEN_INPUT: ${{ secrets.GITHUB_TOKEN }}
