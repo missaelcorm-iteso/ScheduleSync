@@ -173,7 +173,7 @@ jobs:
     uses: missaelcorm-iteso/schedulesync-aws/.github/workflows/create-docker-tag-pr.yml@add-docker-tag-pr-wf
     if: ${{ github.event.inputs.create_pull_request == 'true' }}
     with:
-      service: 
+      service: ${{ env.DOCKER_LOCAL_CONTEXT }}
       docker_tag: ${{ github.event.inputs.docker_tag }}
       github_repository: ${{ github.repository }}
       github_actor: ${{ github.actor }}
