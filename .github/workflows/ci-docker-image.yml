@@ -1,5 +1,7 @@
 name: Docker Image CI
 
+run-name: Docker Image CI for ${{ github.event.inputs.docker_image }} image. Run ${{ github.run_number }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -35,7 +37,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      
+
     - name: Set outputs
       id: vars
       run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
