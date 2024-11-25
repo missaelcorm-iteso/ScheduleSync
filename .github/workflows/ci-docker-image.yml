@@ -37,6 +37,8 @@ jobs:
     env: 
       DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
       DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+    outputs:
+      SERVICE: ${{ steps.set_docker_context.outputs.SERVICE }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -48,11 +50,14 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Set Docker Context
+      id: set_docker_context
       run: |
         if [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-api" ]; then
           echo "DOCKER_LOCAL_CONTEXT=backend" >> $GITHUB_ENV
+          echo "SERVICE=backend" >> $GITHUB_OUTPUT
         elif [ "${{ env.DOCKER_IMAGE }}" == "missaelcorm/schedulesync-web" ]; then
           echo "DOCKER_LOCAL_CONTEXT=frontend" >> $GITHUB_ENV
+          echo "SERVICE=frontend" >> $GITHUB_OUTPUT
         fi
 
     - name: Docker Login
@@ -173,7 +178,7 @@ jobs:
     uses: missaelcorm-iteso/schedulesync-aws/.github/workflows/create-docker-tag-pr.yml@add-docker-tag-pr-wf
     if: ${{ github.event.inputs.create_pull_request == 'true' }}
     with:
-      service: ${{ env.DOCKER_LOCAL_CONTEXT }}
+      service: ${{ needs.build_and_push.outputs.SERVICE }}
       docker-tag: ${{ github.event.inputs.docker_tag }}
       github-repository: ${{ github.repository }}
       github-actor: ${{ github.actor }}
