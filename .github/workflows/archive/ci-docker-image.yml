@@ -14,6 +14,11 @@ on:
         description: 'Docker image tag'
         required: true
         default: 'latest'
+      deploy-k8s:
+        type: boolean
+        description: 'Deploy to Kubernetes'
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -94,9 +99,26 @@ jobs:
         path: codeql-results.sarif
         if-no-files-found: warn
 
+  trigger_deploy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deploy-k8s == true
+    needs: [build_and_push]
+    env:
+      DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
+      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+      WORKFLOW_NAME: 'deploy-schedulesync-api'
+    steps:
+    - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
+      run: |
+        curl -X POST https://api.github.com/repos/${{ vars.SCHEDULESYNC_DEVOPS_REPO }}/dispatches \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", "docker_image": "${{ env.DOCKER_IMAGE }}" }}'
+
   notify_slack:
     runs-on: ubuntu-latest
-    needs: [build_and_push]
+    needs: [build_and_push, trigger_deploy]
     if: ${{ always() }}
     steps:
     - name: Send notification to Slack
