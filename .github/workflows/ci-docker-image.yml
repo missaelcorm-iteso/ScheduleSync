@@ -10,10 +10,6 @@ on:
         options:
           - 'missaelcorm/schedulesync-api'
           - 'missaelcorm/schedulesync-web'
-      docker_tag:
-        description: 'Docker image tag'
-        required: true
-        default: 'latest'
       create_pull_request:
         description: 'Create a pull request to merge the changes'
         required: false
@@ -32,11 +28,24 @@ permissions:
   security-events: write
 
 jobs:
+  set_vars:
+    runs-on: ubuntu-latest
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
+    steps:
+    - name: Set outputs
+      id: vars
+      run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Check outputs
+      run: echo ${{ steps.vars.outputs.short_sha }}
+
   build_and_push:
     runs-on: ubuntu-latest
+    needs: [set_vars]
     env: 
       DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
-      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+      DOCKER_TAG: ${{ needs.set_vars.outputs.short_sha }}
     outputs:
       SERVICE: ${{ steps.set_docker_context.outputs.SERVICE }}
     steps:
@@ -89,10 +98,10 @@ jobs:
 
   trivy_security_scan:
     runs-on: ubuntu-latest
-    needs: [build_and_push]
+    needs: [set_vars, build_and_push]
     env: 
       DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
-      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+      DOCKER_TAG: ${{ needs.set_vars.outputs.short_sha }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -174,14 +183,16 @@ jobs:
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy_pull_request:
-    needs: [build_and_push]
+    needs: [set_vars, build_and_push]
     uses: missaelcorm-iteso/schedulesync-aws/.github/workflows/create-docker-tag-pr.yml@add-docker-tag-pr-wf
     if: ${{ github.event.inputs.create_pull_request == 'true' }}
     with:
       service: ${{ needs.build_and_push.outputs.SERVICE }}
-      docker-tag: ${{ github.event.inputs.docker_tag }}
+      docker-image: ${{ github.event.inputs.docker_image }}
+      docker-tag: ${{ needs.set_vars.outputs.short_sha }}
       github-repository: ${{ github.repository }}
       github-actor: ${{ github.actor }}
       environment: ${{ github.event.inputs.environment }}
+      github-sha: ${{ github.sha }}
     secrets:
       GITHUB_TOKEN_INPUT: ${{ secrets.SCHEDULESYNC_AWS_PR_ACCESS_TOKEN }}
