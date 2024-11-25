@@ -174,9 +174,9 @@ jobs:
     if: ${{ github.event.inputs.create_pull_request == 'true' }}
     with:
       service: ${{ env.DOCKER_LOCAL_CONTEXT }}
-      docker_tag: ${{ github.event.inputs.docker_tag }}
-      github_repository: ${{ github.repository }}
-      github_actor: ${{ github.actor }}
+      docker-tag: ${{ github.event.inputs.docker_tag }}
+      github-repository: ${{ github.repository }}
+      github-actor: ${{ github.actor }}
       environment: ${{ github.event.inputs.environment }}
     secrets:
       GITHUB_TOKEN_INPUT: ${{ secrets.GITHUB_TOKEN }}
