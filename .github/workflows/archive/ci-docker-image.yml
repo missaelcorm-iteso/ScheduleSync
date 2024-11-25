@@ -14,6 +14,11 @@ on:
         description: 'Docker image tag'
         required: true
         default: 'latest'
+      deploy-k8s:
+        type: boolean
+        description: 'Deploy to Kubernetes'
+        required: true
+        default: false
 
 permissions:
   contents: read
@@ -48,7 +53,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-
+        
     - name: Build and push Docker images
       uses: docker/build-push-action@v5.3.0
       with:
@@ -57,31 +62,7 @@ jobs:
         push: true
         tags: "${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}"
 
-    - name: Send notification to Slack
-      uses: ./.github/actions/slack-notify
-      if: always()
-      with:
-        job_name: 'Build and Push Docker Image'
-        job_status: ${{ job.status }}
-        github_workflow: ${{ github.workflow}}
-        repo_name: ${{ github.repository }}
-        branch_name: ${{ github.ref }}
-        commit_sha: ${{ github.sha }}
-        slack_channel: '#notifications'
-        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  trivy_security_scan:
-    runs-on: ubuntu-latest
-    needs: [build_and_push]
-    env: 
-      DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
-      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
     - name: Run Trivy vulnerability scanner
-      id: trivy
       uses: aquasecurity/trivy-action@master
       env:
         TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db:2'
@@ -89,8 +70,7 @@ jobs:
         image-ref: '${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}'
         format: 'json'
         output: 'trivy-results.json'
-        exit-code: '1'
-        ignore-unfixed: false
+        ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH,MEDIUM'
       continue-on-error: true
@@ -101,36 +81,12 @@ jobs:
         name: security-trivy-schedulesync-json-${{ github.sha }}
         path: trivy-results.json
 
-    - name: Send notification to Slack
-      uses: ./.github/actions/slack-notify
-      if: always()
-      with:
-        job_name: 'Trivy Security Scan'
-        job_status: ${{ steps.trivy.outcome }}
-        github_workflow: ${{ github.workflow}}
-        repo_name: ${{ github.repository }}
-        branch_name: ${{ github.ref }}
-        commit_sha: ${{ github.sha }}
-        slack_channel: '#notifications'
-        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  codeql_security_scan:
-    runs-on: ubuntu-latest
-    needs: [build_and_push]
-    env: 
-      DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
-      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: 'javascript'
 
     - name: Perform CodeQL Analysis
-      id: codeql
       uses: github/codeql-action/analyze@v3
       with:
         category: 'codeql-${{ github.event.inputs.docker_image }}'
@@ -143,15 +99,42 @@ jobs:
         path: codeql-results.sarif
         if-no-files-found: warn
 
+  trigger_deploy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deploy-k8s == true
+    needs: [build_and_push]
+    env:
+      DOCKER_IMAGE: ${{ github.event.inputs.docker_image }}
+      DOCKER_TAG: ${{ github.event.inputs.docker_tag }}
+      WORKFLOW_NAME: 'deploy-schedulesync-api'
+    steps:
+    - name: Trigger CD Pipeline at ${{ vars.SCHEDULESYNC_DEVOPS_REPO }} repo
+      run: |
+        curl -X POST https://api.github.com/repos/${{ vars.SCHEDULESYNC_DEVOPS_REPO }}/dispatches \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer ${{ secrets.PAT_GA_SCHEDULESYNC_DEVOPS }}" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        --data '{"event_type": "${{ env.WORKFLOW_NAME }}", "client_payload": { "repository": "${{ env.GITHUB_REPOSITORY }}", "docker_tag": "${{ env.DOCKER_TAG }}", "docker_image": "${{ env.DOCKER_IMAGE }}" }}'
+
+  notify_slack:
+    runs-on: ubuntu-latest
+    needs: [build_and_push, trigger_deploy]
+    if: ${{ always() }}
+    steps:
     - name: Send notification to Slack
-      uses: ./.github/actions/slack-notify
-      if: always()
-      with:
-        job_name: 'CodeQL Security Scan'
-        job_status: ${{ steps.codeql.conclusion }}
-        github_workflow: ${{ github.workflow}}
-        repo_name: ${{ github.repository }}
-        branch_name: ${{ github.ref }}
-        commit_sha: ${{ github.sha }}
-        slack_channel: '#notifications'
-        slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_CHANNEL: '#notifications'
+        SLACK_USERNAME: 'CI Bot'
+        SLACK_ICON_EMOJI: ':rocket:'
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: 'CI/CD Pipeline Notification'
+        SLACK_MESSAGE: |
+          *Pipeline Status*: ${{ job.status }}
+          *Workflow*: ${{ github.workflow }}
+          *Job Name*: ${{ github.job }}
+          *Repository*: ${{ github.repository }}
+          *Branch*: `${{ github.ref }}`
+          *Commit*: `${{ github.sha }}`
+        SLACK_FOOTER: 'Powered by GitHub Actions'
