@@ -1,0 +1,65 @@
+name: Slack Notify
+
+on:
+  workflow_call:
+    inputs:
+      job_name:
+        description: 'Name of the job'
+        required: true
+        default: 'CI/CD Pipeline Notification'
+        type: string
+      job_status:
+        description: 'Status of the job'
+        required: true
+        default: 'success'
+        type: string
+      github_workflow:
+        description: 'Name of the workflow'
+        required: true
+        default: 'CI/CD Pipeline'
+        type: string
+      repo_name:
+        description: 'Name of the repository'
+        required: true
+        default: 'schedulesync'
+        type: string
+      branch_name:
+        description: 'Name of the branch'
+        required: true
+        default: 'main'
+        type: string
+      commit_sha:
+        description: 'SHA of the commit'
+        required: true
+        default: ''
+        type: string
+      slack_channel:
+        description: 'Slack channel to send notification'
+        required: true
+        default: '#notifications'
+        type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        description: 'Slack webhook URL'
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send notification to Slack
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_CHANNEL: ${{ github.event.inputs.slack_channel }}
+        SLACK_USERNAME: 'CI/CD Bot'
+        SLACK_ICON_EMOJI: ':rocket:'
+        SLACK_COLOR: ${{ github.event.inputs.job_status }}
+        SLACK_TITLE: ${{ github.event.inputs.job_name }}
+        SLACK_MESSAGE: |
+          *Pipeline Status*: ${{ github.event.inputs.job_status }}
+          *Workflow*: ${{ github.event.inputs.github_workflow }}
+          *Job Name*: ${{ github.event.inputs.job_name }}
+          *Repository*: ${{ github.event.inputs.repo_name }}
+          *Branch*: ${{ github.event.inputs.branch_name }}
+          *Commit SHA*: ${{ github.event.inputs.commit_sha }}
