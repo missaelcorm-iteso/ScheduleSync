@@ -68,8 +68,6 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
-      secrets:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   trivy_security_scan:
     runs-on: ubuntu-latest
@@ -111,8 +109,6 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
-      secrets:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   codeql_security_scan:
     runs-on: ubuntu-latest
@@ -153,5 +149,3 @@ jobs:
         branch_name: ${{ github.ref }}
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
-      secrets:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
