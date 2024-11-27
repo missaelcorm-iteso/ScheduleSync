@@ -28,6 +28,8 @@ on:
 permissions:
   contents: read
   security-events: write
+  issues: write
+  attestations: write
 
 jobs:
   set_vars:
