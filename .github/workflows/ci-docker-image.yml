@@ -191,7 +191,6 @@ jobs:
     needs: [set_vars, build_and_push]
     runs-on: ubuntu-latest
     steps:
-      steps:
       - name: ZAP Scan
         id: fuzz
         uses: zaproxy/action-baseline@v0.14.0
