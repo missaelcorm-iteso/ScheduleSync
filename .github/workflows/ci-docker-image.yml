@@ -195,6 +195,9 @@ jobs:
       - name: Pull OWASP ZAP Docker Image
         run: docker pull zaproxy/zap-stable
 
+      - name: Create ./results
+        run: mkdir ./results
+
       - name: Run OWASP ZAP Fuzzing
         id: fuzz
         run: |
