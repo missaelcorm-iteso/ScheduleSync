@@ -28,6 +28,8 @@ on:
 permissions:
   contents: read
   security-events: write
+  issues: write
+  attestations: write
 
 jobs:
   set_vars:
@@ -172,8 +174,8 @@ jobs:
       with:
         name: security-codeql-schedulesync-sarif-${{ github.sha }}
         path: codeql-results.sarif
-        if-no-files-found: warn
-
+        if-no-files-found: warn 
+    
     - name: Send notification to Slack
       uses: ./.github/actions/slack-notify
       if: always()
@@ -186,6 +188,35 @@ jobs:
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  fuzzing:
+    needs: [set_vars, build_and_push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ZAP Scan
+        id: fuzz
+        uses: zaproxy/action-baseline@v0.14.0
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'https://schedule-sync-dev.missael.xyz'
+          artifact_name:  security-zap-schedulesync-json-${{ github.sha }}
+
+      - name: Send notification to Slack
+        uses: ./.github/actions/slack-notify
+        if: always()
+        with:
+          job_name: 'Fuzzing Scan'
+          job_status: ${{ steps.fuzz.conclusion }}
+          github_workflow: ${{ github.workflow}}
+          repo_name: ${{ github.repository }}
+          branch_name: ${{ github.ref }}
+          commit_sha: ${{ github.sha }}
+          slack_channel: '#notifications'
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy_pull_request:
     needs: [set_vars, build_and_push]
