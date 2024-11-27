@@ -188,41 +188,16 @@ jobs:
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   fuzzing:
-    name: Fuzzing Analysis
     needs: [set_vars, build_and_push]
     runs-on: ubuntu-latest
     steps:
-      - name: Pull OWASP ZAP Docker Image
-        run: docker pull zaproxy/zap-stable
-
-      - name: Create ./results
-        run: mkdir ./results
-
-      - name: Run OWASP ZAP Fuzzing
+      steps:
+      - name: ZAP Scan
         id: fuzz
-        run: |
-          TARGET_URL="https://schedule-sync-dev.missael.xyz/"
-          docker run --user root --rm -v $(pwd):/zap/results:rw -w /zap zaproxy/zap-stable zap-cli fuzz \
-            --context-file=/zap/results/fuzz-context.context \
-            -t $TARGET_URL \
-            -f /zap/results/fuzz-output.json \
-            -r /zap/results/fuzz-report.html || true
-
-      - name: List files in results directory
-        run: ls -al ./results
-
-      - name: Check if fuzzing files exist
-        run: |
-          test -f results/fuzz-output.json && echo "fuzz-output.json exists" || echo "fuzz-output.json is missing"
-          test -f results/fuzz-report.html && echo "fuzz-report.html exists" || echo "fuzz-report.html is missing"
-
-      - name: Upload Fuzzing Results
-        uses: actions/upload-artifact@v4
+        uses: zaproxy/action-baseline@v0.14.0
         with:
-          name: fuzzing-results-${{ github.sha }}
-          path: |
-            results/fuzz-output.json
-            results/fuzz-report.html
+          target: 'https://schedule-sync-dev.missael.xyz'
+          artifact_name:  security-zap-schedulesync-json-${{ github.sha }}
 
       - name: Send notification to Slack
         uses: ./.github/actions/slack-notify
