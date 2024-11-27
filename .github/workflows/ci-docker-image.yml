@@ -172,8 +172,8 @@ jobs:
       with:
         name: security-codeql-schedulesync-sarif-${{ github.sha }}
         path: codeql-results.sarif
-        if-no-files-found: warn
-
+        if-no-files-found: warn 
+    
     - name: Send notification to Slack
       uses: ./.github/actions/slack-notify
       if: always()
@@ -186,6 +186,53 @@ jobs:
         commit_sha: ${{ github.sha }}
         slack_channel: '#notifications'
         slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  fuzzing:
+    name: Fuzzing Analysis
+    needs: [set_vars, build_and_push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull OWASP ZAP Docker Image
+        run: docker pull zaproxy/zap-stable
+
+      - name: Run OWASP ZAP Fuzzing
+        id: fuzz
+        run: |
+          TARGET_URL="https://schedule-sync-dev.missael.xyz/"
+          docker run --user root --rm -v $(pwd):/zap/results:rw -w /zap zaproxy/zap-stable zap-cli fuzz \
+            --context-file=/zap/results/fuzz-context.context \
+            -t $TARGET_URL \
+            -f /zap/results/fuzz-output.json \
+            -r /zap/results/fuzz-report.html || true
+
+      - name: List files in results directory
+        run: ls -al ./results
+
+      - name: Check if fuzzing files exist
+        run: |
+          test -f results/fuzz-output.json && echo "fuzz-output.json exists" || echo "fuzz-output.json is missing"
+          test -f results/fuzz-report.html && echo "fuzz-report.html exists" || echo "fuzz-report.html is missing"
+
+      - name: Upload Fuzzing Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzzing-results-${{ github.sha }}
+          path: |
+            results/fuzz-output.json
+            results/fuzz-report.html
+
+      - name: Send notification to Slack
+        uses: ./.github/actions/slack-notify
+        if: always()
+        with:
+          job_name: 'Fuzzing Scan'
+          job_status: ${{ steps.fuzz.conclusion }}
+          github_workflow: ${{ github.workflow}}
+          repo_name: ${{ github.repository }}
+          branch_name: ${{ github.ref }}
+          commit_sha: ${{ github.sha }}
+          slack_channel: '#notifications'
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy_pull_request:
     needs: [set_vars, build_and_push]
