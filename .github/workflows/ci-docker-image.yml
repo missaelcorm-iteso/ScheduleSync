@@ -195,6 +195,7 @@ jobs:
         id: fuzz
         uses: zaproxy/action-baseline@v0.14.0
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://schedule-sync-dev.missael.xyz'
           artifact_name:  security-zap-schedulesync-json-${{ github.sha }}
 
