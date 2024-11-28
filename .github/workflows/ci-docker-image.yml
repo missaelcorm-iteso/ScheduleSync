@@ -17,6 +17,11 @@ on:
         required: false
         default: false
         type: boolean
+      fuzzy:
+        description: 'Run ZAP Fuzzing'
+        required: false
+        default: false
+        type: boolean
       environment:
         description: 'Environment to deploy the image'
         required: false
@@ -192,18 +197,33 @@ jobs:
   fuzzing:
     needs: [set_vars, build_and_push]
     runs-on: ubuntu-latest
+    container: 
+      image: zaproxy/zap-stable:2.15.0
+      volumes:
+        - ${{ github.workspace }}:/zap/wrk/:rw
+      options: --user root --workdir /zap/wrk
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
+      TARGET_URL: 'https://schedule-sync-${{ github.event.inputs.environment }}.missael.xyz'
+    if: ${{ github.event.inputs.fuzzy == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create Results Directory
+        run: mkdir -p ./results
+
       - name: ZAP Scan
         id: fuzz
-        uses: zaproxy/action-baseline@v0.14.0
+        run: |
+          zap-baseline.py -t ${{ env.TARGET_URL }} -x ./results/zapproxy-results.xml -r ./results/zapproxy-results.html
         continue-on-error: true
+
+      - name: Upload ZAP Scan Results as artifact
+        uses: actions/upload-artifact@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://schedule-sync-dev.missael.xyz'
-          artifact_name:  security-zap-schedulesync-json-${{ github.sha }}
+          name: security_zapproxy_${{ env.ENVIRONMENT }}_xml_html_${{ github.sha }}
+          path: ./results
 
       - name: Send notification to Slack
         uses: ./.github/actions/slack-notify
