@@ -192,9 +192,6 @@ jobs:
   fuzzing:
     needs: [set_vars, build_and_push]
     runs-on: ubuntu-latest
-    container: 
-      image: zaproxy/zap-stable:2.15.0
-      options: "--user  \"$(id -u):$(id -g)\""
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       TARGET_URL: 'https://schedule-sync-${{ github.event.inputs.environment }}.missael.xyz'
@@ -208,6 +205,7 @@ jobs:
       - name: ZAP Scan
         id: fuzz
         run: |
+          docker run --user $(id -u):$(id -g) -w /zap -v $(pwd):/zap/wrk:rw --rm owasp/zap2docker-stable:2.15.0 \ 
           zap-baseline.py -t ${{ env.TARGET_URL }} -x ./results/zapproxy-results.xml -r ./results.zapproxy-results.html
         continue-on-error: true
 
