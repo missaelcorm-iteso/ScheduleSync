@@ -192,7 +192,9 @@ jobs:
   fuzzing:
     needs: [set_vars, build_and_push]
     runs-on: ubuntu-latest
-    container: zaproxy/zap-stable:2.15.0
+    container: 
+      image: zaproxy/zap-stable:2.15.0
+      options: --user 1000:1000
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       TARGET_URL: 'https://schedule-sync-${{ github.event.inputs.environment }}.missael.xyz'
