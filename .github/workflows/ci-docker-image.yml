@@ -194,7 +194,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: zaproxy/zap-stable:2.15.0
-      options: --user 1000:1000
+      options: "--user  $(id -u):$(id -g)"
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       TARGET_URL: 'https://schedule-sync-${{ github.event.inputs.environment }}.missael.xyz'
