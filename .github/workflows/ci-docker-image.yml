@@ -210,7 +210,7 @@ jobs:
       - name: ZAP Scan
         id: fuzz
         run: |
-          zap-baseline.py -t ${{ env.TARGET_URL }} -x ./results/zapproxy-results.xml -r ./results.zapproxy-results.html
+          zap-baseline.py -t ${{ env.TARGET_URL }} -x ./results/zapproxy-results.xml -r ./results/zapproxy-results.html
         continue-on-error: true
 
       - name: Upload ZAP Scan Results as artifact
