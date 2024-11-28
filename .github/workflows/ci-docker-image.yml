@@ -17,6 +17,11 @@ on:
         required: false
         default: false
         type: boolean
+      fuzzy:
+        description: 'Run ZAP Fuzzing'
+        required: false
+        default: false
+        type: boolean
       environment:
         description: 'Environment to deploy the image'
         required: false
@@ -200,6 +205,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       TARGET_URL: 'https://schedule-sync-${{ github.event.inputs.environment }}.missael.xyz'
+    if: ${{ github.event.inputs.fuzzy == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
