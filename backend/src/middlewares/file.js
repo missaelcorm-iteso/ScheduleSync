@@ -3,10 +3,21 @@ const { v4: uuidv4 } = require('uuid');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const multerS3 = require('multer-s3');
 
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1'
-  // No need for credentials in ECS
-});
+const s3Config = {
+  region: process.env.AWS_REGION || 'us-east-1',
+  forcePathStyle: true, // Required for LocalStack
+};
+
+// Add endpoint and credentials for local development
+if (process.env.ENVIRONMENT === 'local' && process.env.AWS_ENDPOINT_URL_S3) {
+  s3Config.endpoint = process.env.AWS_ENDPOINT_URL_S3;
+  s3Config.credentials = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  };
+}
+
+const s3Client = new S3Client(s3Config);
 
 const validExtensions = ['png', 'jpg', 'jpeg'];
 

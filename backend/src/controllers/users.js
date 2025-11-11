@@ -4,6 +4,7 @@ const path = require('path');
 
 const User = require('./../models/user');
 const file = require('./../models/file');
+const { generatePresignedUrl } = require('./../utils/s3');
 
 class UsersController {
     list(req, res){
@@ -122,13 +123,12 @@ class UsersController {
             return;
         }
 
-        const fileUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${req.file.key}`; 
-
+        // Store only the S3 key, not the full URL
+        // URL will be generated on-demand as a pre-signed URL
         file.create({
             userId: id,
             name: req.file.originalname,
             key: req.file.key,
-            url: fileUrl,
             size: req.file.size,
             mimetype: req.file.mimetype,
             created_at: Date.now(),
@@ -140,16 +140,27 @@ class UsersController {
         })
     }
 
-    attachments(req, res){
+    async attachments(req, res){
         const id = req.params.id;
-        file.find({ userId: id })
-        .sort({ created_at: -1 })
-        .then((files) => {
-            res.send(files);
-        }).catch((err) => {
+        try {
+            const files = await file.find({ userId: id }).sort({ created_at: -1 });
+
+            // Generate pre-signed URLs for each file (valid for 24 hours)
+            const filesWithUrls = await Promise.all(
+                files.map(async (file) => {
+                    const url = await generatePresignedUrl(file.key, 86400); // 24 hours
+                    return {
+                        ...file.toObject(),
+                        url: url,
+                    };
+                })
+            );
+
+            res.send(filesWithUrls);
+        } catch (err) {
             console.error('Error while searching the files', err);
             res.status(500).send({ message: 'Error while searching the files' });
-        });
+        }
     }
 }
 

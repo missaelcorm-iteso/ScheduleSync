@@ -1,3 +1,7 @@
 node_modules/
 .env
 backend/uploads/*
+localstack/*
+!localstack/init-s3.sh
+.db_root_username
+.db_root_password
