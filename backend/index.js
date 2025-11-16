@@ -33,7 +33,7 @@ MONGO_CONNECTION_OPTIONS.forEach((value, key) => {
     MONGO_CONNECTION_OPTIONS_OBJECT[key] = value;
 });
 
-if (CERT_PATH && MONGO_URI.includes("mongodb+srv")) {
+if (CERT_PATH) {
     MONGO_CONNECTION_OPTIONS_OBJECT = {
         ...MONGO_CONNECTION_OPTIONS_OBJECT,
         tls: true,
