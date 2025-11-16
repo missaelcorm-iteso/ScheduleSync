@@ -12,13 +12,26 @@ const app = express();
 const routes = require('./src/routes');
 
 const {
-    MONGO_URI,
+    MONGO_PROTOCOL,
+    MONGO_HOST,
+    MONGO_PORT,
+    MONGO_DB,
+    MONGO_USER,
+    MONGO_PASS,
+    MONGO_ARGS,
     CERT_PATH,
 } = process.env;
 
 const APP_PORT = process.env.APP_PORT || 3000;
 
+const _MONGO_PORT = MONGO_PROTOCOL == "mongodb+srv" ? '' : `:${MONGO_PORT}`;
+const MONGO_URI = `${MONGO_PROTOCOL}://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}${_MONGO_PORT}/${MONGO_DB}`;
+const MONGO_CONNECTION_OPTIONS = new URLSearchParams(MONGO_ARGS);
 let MONGO_CONNECTION_OPTIONS_OBJECT = {};
+
+MONGO_CONNECTION_OPTIONS.forEach((value, key) => {
+    MONGO_CONNECTION_OPTIONS_OBJECT[key] = value;
+});
 
 if (CERT_PATH && MONGO_URI.includes("mongodb+srv")) {
     MONGO_CONNECTION_OPTIONS_OBJECT = {
